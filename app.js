@@ -22,19 +22,22 @@ io.on('connection', (socket) => {
   console.log (`New user connected: ${socket.id}`);
 
   socket.on('join-room', (player) => {
-    console.log(player)
     socket.join(`room${player.room}`);
     console.log(`Player ${player.name} joined room ${player.room}`);
-    socket.emit('player-joined-a-room', player);
-    socket.to(`room${player.room}`).emit(`Player ${player.name} joined this room`);
+    socket.to(`room${player.room}`).emit('player-joined-a-room' ,`Player ${player.name} joined this room`);
   })
 
   socket.on('disconnect', () => {
     console.log(`user disconnected: ${socket.id}`);
   })
 
-  socket.on('send-user-message', message => {
-    socket.broadcast.emit('user-chat-message', message);
+  socket.on('send-user-message', (data) => {
+    console.log(`sending message ${data.message} from ${data.player.name} to ${data.player.room}.`);
+    io.to(`room${data.player.room}`).emit('user-chat-message', data);
+  })
+
+  socket.on('admin-action', (message) => {
+    io.emit('admin-calling', message);
   })
 
 })
@@ -42,10 +45,3 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
   console.log(`listening on ${PORT}.`)
 })
-
-
-// Helperfunctions
-const createRoom = (roomNumber) => {
-  const room = io.of(`/room${roomNumber}`);
-  return room;
-}
