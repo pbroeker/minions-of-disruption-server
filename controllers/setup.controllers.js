@@ -9,10 +9,10 @@ let users = [];
 const joinRoom = (io, socket) => ({ player, roomId }) => {
   console.log(`Player ${player.name} joined room ${roomId}`);
   let newRooms = [...rooms];
-  let oldPlayersInRoom = Array.from(rooms[roomId-1].players);
+  let oldPlayersInRoom = Array.from(rooms[roomId].players);
   let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== player.name);
   newPlayersInRoom.push(player);
-  newRooms[roomId-1].players = newPlayersInRoom;
+  newRooms[roomId].players = newPlayersInRoom;
   socket.join(`room${roomId}`);
   io.emit('send-rooms', newRooms);
   io.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${player.name} joined this room`);
@@ -25,9 +25,9 @@ const sendRooms = () => {
 const leaveRoom = (io, socket) => ({ player, roomId }) => {
   console.log(`Player ${player.name} left room ${roomId}`);
   let newRooms = [...rooms];
-  let oldPlayersInRoom = Array.from(rooms[roomId-1].players);
+  let oldPlayersInRoom = Array.from(rooms[roomId].players);
   let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== player.name);
-  newRooms[roomId-1].players = newPlayersInRoom;
+  newRooms[roomId].players = newPlayersInRoom;
   socket.leave(`room${roomId}`);
   io.emit('send-rooms', rooms);
   io.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${player.name} joined this room`);
