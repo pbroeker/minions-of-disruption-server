@@ -25,7 +25,7 @@ let users = [];
 let rooms = [
   { name: 'room1', id: 1, players: [] },
   { name: 'room2', id: 2, players: [] },
-  { name: 'room2', id: 3, players: [] },
+  { name: 'room3', id: 3, players: [] },
 ];
 
 io.on('connection', (socket) => { 
