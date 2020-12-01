@@ -1,5 +1,5 @@
 const socketIo = require('socket.io');
-const { joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms } = require('./controllers/setup.controllers');
+const { updateGameStatus, startGame, joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms } = require('./controllers/setup.controllers');
 
 async function sio (server) {
 
@@ -17,25 +17,24 @@ async function sio (server) {
 
   adminNamespace.on('connection', socket => {
     console.log('An admin logged in.');
-
+    socket.on('send-game-status', updateGameStatus(playerNamespace, socket))
     socket.on('admin-create-rooms', adminCreateRooms);
     socket.on('admin-sends-to-all', adminSendMessage(io));
     socket.on('join-room', joinRoom(io, socket));
     socket.on('leave-room', leaveRoom(io, socket));
     socket.on('update-players', updatePlayers(io));
+    socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
     })
   });
   playerNamespace.on('connection', (socket) => { 
     console.log('Player connected' + socket.client.id);
-
     socket.emit('send-rooms', sendRooms());
     socket.on('join-room', joinRoom(adminNamespace, socket));
     socket.on('leave-room', leaveRoom(adminNamespace, socket));
     socket.on('send-user-message', sendUserMessage(adminNamespace, socket));
     socket.on('update-players', updatePlayers(adminNamespace, socket));
-    
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
     });

@@ -1,7 +1,7 @@
 let rooms = [
-  { name: 'room1', id: 1, players: [] },
-  { name: 'room2', id: 2, players: [] },
-  { name: 'room3', id: 3, players: [] },
+  { name: 'room1', id: 0, players: [] },
+  { name: 'room2', id: 1, players: [] },
+  { name: 'room3', id: 2, players: [] },
 ];
 
 let users = [];
@@ -57,4 +57,15 @@ const adminCreateRooms = (roomObjects) => {
   rooms = roomObjects;
 }
 
-module.exports = { adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms };
+const updateGameStatus = (playerNamespace, socket) => (status) => {
+  playerNamespace.emit('update-game-status', status);
+  socket.emit('update-game-status', status);
+}
+
+const startGame = (playerNamespace) => () => {
+  console.log('game starting');
+  rooms.forEach((room) => {
+    playerNamespace.in(`room${room.id}`).emit('start-the-game', room.players);
+  })
+}
+module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms };
