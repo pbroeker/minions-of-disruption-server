@@ -1,5 +1,5 @@
 const socketIo = require('socket.io');
-const { joinRoom, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms } = require('./controllers/setup.controllers');
+const { joinRoom, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updateClimmies } = require('./controllers/setup.controllers');
 
 async function sio (server) {
 
@@ -37,6 +37,8 @@ async function sio (server) {
     socket.on('send-user-message', sendUserMessage(io));
     
     socket.on('update-players', updatePlayers(io));
+
+    socket.on('update-climmies', updateClimmies(io));
     
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);

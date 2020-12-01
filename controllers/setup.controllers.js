@@ -45,8 +45,13 @@ const updatePlayers = (io) => (player) => {
   io.emit('update-state-players', users);
 }
 
+const updateClimmies = (io) => (socket, climmie) => {
+  console.log(climmie);
+  console.log(socket);
+}
+
 const adminCreateRooms = (roomObjects) => {
   rooms = roomObjects;
 }
 
-module.exports = { joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms };
+module.exports = { joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updateClimmies };
