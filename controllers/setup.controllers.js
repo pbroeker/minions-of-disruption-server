@@ -6,7 +6,7 @@ let rooms = [
 
 let users = [];
 
-const joinRoom = (io, socket) => ({ player, roomId }) => {
+const joinRoom = (adminNamespace, socket) => ({ player, roomId }) => {
   console.log(`Player ${player.name} joined room ${roomId}`);
   let newRooms = [...rooms];
   let oldPlayersInRoom = Array.from(rooms[roomId].players);
@@ -14,39 +14,47 @@ const joinRoom = (io, socket) => ({ player, roomId }) => {
   newPlayersInRoom.push(player);
   newRooms[roomId].players = newPlayersInRoom;
   socket.join(`room${roomId}`);
-  io.emit('send-rooms', newRooms);
-  io.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${player.name} joined this room`);
+  socket.emit('send-rooms', newRooms);
+  adminNamespace.emit('send-rooms', newRooms);
+  socket.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${player.name} joined this room`);
 } 
 
 const sendRooms = () => {
   return rooms;
 }
 
-const leaveRoom = (io, socket) => ({ player, roomId }) => {
+const adminSendMessage = (io) => (message) => {
+  io.emit('user-chat-message', { player: { name: 'Admin' }, message: message })
+}
+
+const leaveRoom = (adminNamespace, socket) => ({ player, roomId }) => {
   console.log(`Player ${player.name} left room ${roomId}`);
   let newRooms = [...rooms];
   let oldPlayersInRoom = Array.from(rooms[roomId].players);
   let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== player.name);
   newRooms[roomId].players = newPlayersInRoom;
   socket.leave(`room${roomId}`);
-  io.emit('send-rooms', rooms);
-  io.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${player.name} joined this room`);
+  adminNamespace.emit('send-rooms', rooms);
+  socket.emit('send-rooms', rooms);
+  socket.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${player.name} joined this room`);
 }
 
-const sendUserMessage = (io) => ({ player, message}) => {
+const sendUserMessage = (adminNamespace, socket) => ({ player, message}) => {
   console.log(`sending message ${message} from ${player.name} to ${player.designatedRoom}.`);
-  io.in(`room${player.designatedRoom}`).emit('user-chat-message', { player:player, message: message });
-}
+  socket.in(`room${player.designatedRoom}`).emit('user-chat-message', { player:player, message: message });
+  adminNamespace.emit('user-chat-message-to-admin', { player: player, message: message });
+};
 
-const updatePlayers = (io) => (player) => {
+const updatePlayers = (adminNamespace, socket) => (player) => {
   const newPlayers = users.filter((oldPlayer) => oldPlayer.name !== player.name)
   newPlayers.push(player);
   users = newPlayers;
-  io.emit('update-state-players', users);
+  adminNamespace.emit('update-state-players', users);
+  socket.emit('update-state-players', users);
 }
 
 const adminCreateRooms = (roomObjects) => {
   rooms = roomObjects;
 }
 
-module.exports = { joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms };
+module.exports = { adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms };
