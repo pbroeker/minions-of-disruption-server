@@ -6,17 +6,20 @@ let rooms = [
 
 let users = [];
 
-const joinRoom = (adminNamespace, socket) => ({ player, roomId }) => {
-  console.log(`Player ${player.name} joined room ${roomId}`);
+const joinRoom = (adminNamespace, socket) => ({ user, roomId }) => {
+  // Add to users
+  users.push(user);
+  console.log('Users', users)
+  // Add to room
   let newRooms = [...rooms];
   let oldPlayersInRoom = Array.from(rooms[roomId].players);
-  let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== player.name);
-  newPlayersInRoom.push(player);
+  let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== user.name);
+  newPlayersInRoom.push(user);
   newRooms[roomId].players = newPlayersInRoom;
   socket.join(`room${roomId}`);
   socket.emit('send-rooms', newRooms);
   adminNamespace.emit('send-rooms', newRooms);
-  socket.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${player.name} joined this room`);
+  socket.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${user.name} joined this room`);
 } 
 
 const sendRooms = () => {
@@ -53,11 +56,6 @@ const updatePlayers = (adminNamespace, socket) => (player) => {
   socket.emit('update-state-players', users);
 }
 
-const updateClimmies = (io) => (socket, climmie) => {
-  console.log(climmie);
-  console.log(socket);
-}
-
 const adminCreateRooms = (roomObjects) => {
   rooms = roomObjects;
 }
@@ -69,8 +67,27 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 
 const startGame = (playerNamespace) => () => {
   console.log('game starting');
+  console.log('users', users);
+
+  // Init players
+  const colors = ['blue', 'red', 'green', 'orange'];
+  const updatedUsers = users.map((user) => {
+    const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '' };
+    return {...user, position: 1, role: defaultRole, hand: [] };
+  })
+  // Update state in rooms
   rooms.forEach((room) => {
-    playerNamespace.in(`room${room.id}`).emit('start-the-game', users.filter((el) => el.designatedRoom === room.id));
+    playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));
   })
 }
-module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updateClimmies };
+
+const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
+  const roomId = players[0].designatedRoom;
+  console.log('players array received:', players);
+  console.log('room', roomId);
+  playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
+  adminNamespace.emit('update-players-in-room', players);
+}
+
+
+module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
