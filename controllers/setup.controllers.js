@@ -69,7 +69,7 @@ const startGame = (playerNamespace) => () => {
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users.map((user) => {
     const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '' };
-    return {...user, position: 1, role: defaultRole, hand: [] };
+    return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0 };
   })
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));
@@ -84,14 +84,15 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
   adminNamespace.emit('update-players-in-room', players);
 }
 
-// const updateStateInRoom = (adminNamespace, playerNamespace) => (boardState, roomID) => {
-//   console.log('boardState received:', boardState);
-//   console.log('room', roomID);
-//   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
-//   adminNamespace.emit('update-state-in-room', boardState);
-// }
+// const updateStateInRoom = (adminNamespace, playerNamespace) => ({ boardState, roomID }) => {
+const updateStateInRoom = (adminNamespace, playerNamespace) => ( boardState ) => {
+  console.log('boardState received:', boardState);
+  // console.log('room', { roomID: roomID });
+  playerNamespace.to(`room${0}`).emit('update-state-in-room', boardState);
+  adminNamespace.emit('update-state-in-room', boardState);
+}
 
 
 
 
-module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
+module.exports = { updateStateInRoom, startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
