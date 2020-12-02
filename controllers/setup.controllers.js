@@ -66,16 +66,11 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 }
 
 const startGame = (playerNamespace) => () => {
-  console.log('game starting');
-  console.log('users', users);
-
-  // Init players
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users.map((user) => {
     const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '' };
     return {...user, position: 1, role: defaultRole, hand: [] };
   })
-  // Update state in rooms
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));
   })
@@ -88,6 +83,15 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
   playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
 }
+
+// const updateStateInRoom = (adminNamespace, playerNamespace) => (boardState, roomID) => {
+//   console.log('boardState received:', boardState);
+//   console.log('room', roomID);
+//   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
+//   adminNamespace.emit('update-state-in-room', boardState);
+// }
+
+
 
 
 module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
