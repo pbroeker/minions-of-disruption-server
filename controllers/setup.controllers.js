@@ -70,7 +70,7 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 const startGame = (playerNamespace) => () => {
   console.log('game starting');
   rooms.forEach((room) => {
-    playerNamespace.in(`room${room.id}`).emit('start-the-game', room.players);
+    playerNamespace.in(`room${room.id}`).emit('start-the-game', users.filter((el) => el.designatedRoom === room.id));
   })
 }
 module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updateClimmies };
