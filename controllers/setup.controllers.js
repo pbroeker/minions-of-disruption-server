@@ -78,17 +78,14 @@ const startGame = (playerNamespace) => () => {
 
 const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
   const roomId = players[0].designatedRoom;
-  console.log('players array received:', players);
-  console.log('room', roomId);
   playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
 }
 
-// const updateStateInRoom = (adminNamespace, playerNamespace) => ({ boardState, roomID }) => {
-const updateStateInRoom = (adminNamespace, playerNamespace) => ( boardState ) => {
-  console.log('boardState received:', boardState);
-  // console.log('room', { roomID: roomID });
-  playerNamespace.to(`room${0}`).emit('update-state-in-room', boardState);
+const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
+  console.log('state received:', boardState);
+  console.log('room', roomID);
+  playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
   adminNamespace.emit('update-state-in-room', boardState);
 }
 
