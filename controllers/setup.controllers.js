@@ -1,3 +1,5 @@
+const clone = require('rfdc')()
+
 let rooms = [
   { name: 'room1', id: 0, players: [] },
   { name: 'room2', id: 1, players: [] },
@@ -6,18 +8,17 @@ let rooms = [
 
 let users = [];
 
-const joinRoom = (adminNamespace, socket) => ({ user, roomId }) => {
-  // Add to users
+const joinRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
+  console.log(`joinroom called with roomId ${roomId} and user`, user);
+  const newRooms = clone(rooms);
+  newRooms[roomId].players.push(user);
+  rooms = newRooms;
+  console.log('rooms: ',rooms);
   users.push(user);
   console.log('Users', users)
-  // Add to room
-  let newRooms = [...rooms];
-  let oldPlayersInRoom = Array.from(rooms[roomId].players);
-  let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== user.name);
-  newPlayersInRoom.push(user);
-  newRooms[roomId].players = newPlayersInRoom;
+  
   socket.join(`room${roomId}`);
-  socket.emit('send-rooms', newRooms);
+  io.emit('send-rooms', newRooms);
   adminNamespace.emit('send-rooms', newRooms);
   socket.in(`room${roomId}`).emit('player-joined-a-room' ,`Player ${user.name} joined this room`);
 } 
@@ -30,22 +31,26 @@ const adminSendMessage = (io) => (message) => {
   io.emit('user-chat-message', { player: { name: 'Admin' }, message: message })
 }
 
-const leaveRoom = (adminNamespace, socket) => ({ player, roomId }) => {
-  console.log(`Player ${player.name} left room ${roomId}`);
-  let newRooms = [...rooms];
-  let oldPlayersInRoom = Array.from(rooms[roomId].players);
-  let newPlayersInRoom = oldPlayersInRoom.filter((oldPlayer) => oldPlayer.name !== player.name);
-  newRooms[roomId].players = newPlayersInRoom;
+const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
+  users = users.filter(player => player.name != user.name)
+  console.log(users);
+  console.log(`Player ${user.name} left room ${roomId}`);
+  const newRooms = clone(rooms);
+  console.log('oldrooms in leavroom: ', newRooms);
+  const newRoomPlayers = newRooms[roomId].players.filter(player => player.name !== user.name);
+  newRooms[roomId].players = newRoomPlayers;
+  rooms = newRooms;
+  console.log('newRooms without this user');
   socket.leave(`room${roomId}`);
-  adminNamespace.emit('send-rooms', rooms);
-  socket.emit('send-rooms', rooms);
-  socket.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${player.name} joined this room`);
+  io.emit('send-rooms', newRooms);
+  adminNamespace.emit('send-rooms', newRooms);
+  socket.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${user.name} joined  this room`);
 }
 
-const sendUserMessage = (adminNamespace, socket) => ({ player, message}) => {
-  console.log(`sending message ${message} from ${player.name} to ${player.designatedRoom}.`);
-  socket.in(`room${player.designatedRoom}`).emit('user-chat-message', { player:player, message: message });
-  adminNamespace.emit('user-chat-message-to-admin', { player: player, message: message });
+const sendUserMessage = (adminNamespace, io) => ({ user, message}) => {
+  console.log(`sending message ${message} from ${user.name} to ${user.designatedRoom}.`);
+  io.to(`room${user.designatedRoom}`).emit('send-user-message', { user:user, message: message });
+  adminNamespace.emit('user-chat-message-to-admin', { user: user, message: message });
 };
 
 const updatePlayers = (adminNamespace, socket) => (player) => {
@@ -83,15 +88,5 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
   playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
 }
-
-// const updateStateInRoom = (adminNamespace, playerNamespace) => (boardState, roomID) => {
-//   console.log('boardState received:', boardState);
-//   console.log('room', roomID);
-//   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
-//   adminNamespace.emit('update-state-in-room', boardState);
-// }
-
-
-
 
 module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
