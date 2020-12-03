@@ -85,8 +85,9 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
 const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
   console.log('state received:', boardState);
   console.log('room', roomID);
+  const updState = { state: boardState, room: roomID }
   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
-  adminNamespace.emit('update-state-in-room', boardState);
+  adminNamespace.emit('update-state-in-room', updState);
 }
 
 
