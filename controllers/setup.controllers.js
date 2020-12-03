@@ -27,7 +27,7 @@ const sendRooms = () => {
   return rooms;
 }
 
-const adminSendMessage = (io) => (message) => {
+const adminSendMessage = (io) => (adminMessage) => {
   io.emit('user-chat-message', { player: { name: 'Admin' }, message: message })
 }
 
@@ -87,6 +87,20 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
   console.log('room', roomId);
   playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
+}
+
+const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
+  const roomId = players[0].designatedRoom;
+  playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
+  adminNamespace.emit('update-players-in-room', players);
+}
+
+const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
+  console.log('state received:', boardState);
+  console.log('room', roomID);
+  const updState = { state: boardState, room: roomID }
+  playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
+  adminNamespace.emit('update-state-in-room', updState);
 }
 
 module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
