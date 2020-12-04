@@ -14,7 +14,6 @@ exports.createToken = async (req, res) => {
         game_version: game_version,
         code: code
       });
-      console.log('answer', answer);
       res.status(201);
       res.send(answer);
     }
@@ -26,12 +25,12 @@ exports.createToken = async (req, res) => {
 }
 
 exports.checkToken = async (req, res) => {
-  console.log(req.params.token);
   try {
     const code = req.params.token;
     const answer = await Token.findOne({ code: code });
+    req.session.loggedIn = true;
     res.status(200);
-    res.send(answer)
+    res.send({answer, })
   } catch (error) {
     console.log(error);
     res.status(500);

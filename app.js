@@ -4,7 +4,7 @@ const http = require('http');
 const PORT = process.env.PORT || 3005;
 const db = require('./model/index');
 const cookieparser = require('cookie-parser');
-// const session = require('express-session');
+const session = require('express-session');
 const cors = require('cors');
 const sio = require('./io');
 const { json } = require('express');
@@ -21,6 +21,14 @@ app.use(cors({
   origin:'http://localhost:3000'
 }
 ));
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 }
+}));
+
 app.use(router);
 
 // (async function () {
