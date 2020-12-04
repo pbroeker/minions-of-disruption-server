@@ -18,7 +18,8 @@ app.use(json());
 app.use(cookieparser());
 app.use(cors({
   credentials: true,
-  origin:'http://localhost:3000'
+  origin:'http://localhost:3000',
+  methods: ['GET', 'PUT', 'POST']
 }
 ));
 
@@ -36,5 +37,4 @@ app.use(router);
   server.listen(PORT, () => {
     console.log(`listening on ${PORT}.`)
   })
-// }
-// )
+// })

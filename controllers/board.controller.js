@@ -7,7 +7,10 @@ exports.saveBoard = async (req, res) => {
     res.sendStatus(500);
    }
    else {
-     const answer = await Board.create({ boardData: boardData, players: players, room: room});
+     const answer = await Board.create({
+       boardData: boardData,
+       players: players,
+       room: room});
      res.status(201);
      res.send(answer);
    }
@@ -22,7 +25,6 @@ exports.loadBoard = async (req, res) => {
   try {
     const id = req.params.id;
     const answer = await Board.findById(id);
-    console.log(answer);
     res.status(200);  
     res.send(answer);
   } catch (error) {

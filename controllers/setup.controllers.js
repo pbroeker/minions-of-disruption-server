@@ -9,14 +9,11 @@ let rooms = [
 let users = [];
 
 const joinRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
-  console.log(`joinroom called with roomId ${roomId} and user`, user);
+  console.log(`user ${user} joined room ${roomId}`);
   const newRooms = clone(rooms);
   newRooms[roomId].players.push(user);
   rooms = newRooms;
-  console.log('rooms: ',rooms);
-  users.push(user);
-  console.log('Users', users)
-  
+  users.push(user);  
   socket.join(`room${roomId}`);
   io.emit('send-rooms', newRooms);
   adminNamespace.emit('send-rooms', newRooms);
@@ -36,14 +33,11 @@ const adminSendMessage = (io, socket) => (adminMessage) => {
 
 const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
   users = users.filter(player => player.name != user.name)
-  console.log(users);
-  console.log(`Player ${user.name} left room ${roomId}`);
+  console.log(`user ${user} left room ${roomId}`);
   const newRooms = clone(rooms);
-  console.log('oldrooms in leavroom: ', newRooms);
   const newRoomPlayers = newRooms[roomId].players.filter(player => player.name !== user.name);
   newRooms[roomId].players = newRoomPlayers;
   rooms = newRooms;
-  console.log('newRooms without this user');
   socket.leave(`room${roomId}`);
   io.emit('send-rooms', newRooms);
   adminNamespace.emit('send-rooms', newRooms);

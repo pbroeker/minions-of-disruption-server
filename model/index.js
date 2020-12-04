@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/minionsOfD',
+mongoose.connect(process.env.DATABASE_CONNECTION,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
