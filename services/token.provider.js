@@ -1,9 +1,5 @@
-const createCode = (limit=1000) => {
-  return randomNumber(limit);
+const createCode = (min=1000, max=10000) => {
+  return Math.floor(Math.random() * (max - min) + min); 
 } 
-
-const randomNumber = (limit) => {
-  if (typeof limit === 'number') return Math.floor(Math.random() * limit);
-}
 
 module.exports = { createCode };

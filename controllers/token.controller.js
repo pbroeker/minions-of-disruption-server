@@ -3,18 +3,20 @@ const { createCode } = require('../services/token.provider');
 
 exports.createToken = async (req, res) => {
   try {
-    const { game_id, language, game_version } = req.body;
+    const { language, game_version } = req.body;
     const code = createCode();
-    if (!game_id || !language || !game_version ) res.sendStatus(500);
+    if (!language || !game_version ) {
+      res.sendStatus(500);
+    }
     else {
       const answer = await Token.create({ 
-        game_id: game_id, 
         language: language,
         game_version: game_version,
         code: code
       });
+      console.log('answer', answer);
       res.status(201);
-      res.send(JSON.stringify(answer));
+      res.send(answer);
     }
   } catch (error) {
       console.log(error);
