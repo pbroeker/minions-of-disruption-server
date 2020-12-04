@@ -28,7 +28,8 @@ const sendRooms = () => {
 }
 
 const adminSendMessage = (io) => (adminMessage) => {
-  io.emit('user-chat-message', { player: { name: 'Admin' }, message: message })
+  console.log(adminMessage);
+  io.emit('user-chat-message', adminMessage);
 }
 
 const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
@@ -88,8 +89,6 @@ const updatePlayersInRoom = (adminNamespace, playerNamespace) => ({ players, roo
 }
 
 const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
-  console.log('state received:', boardState);
-  console.log('room', roomID);
   const updState = { state: boardState, room: roomID }
   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
   adminNamespace.emit('update-state-in-room', updState);
