@@ -2,10 +2,12 @@ const Board = require('../model/board.model');
 
 exports.saveBoard = async (req, res) => {
  try {
-   const { boardData, players } = req.body;
-   if (!boardData || !players) res.sendStatus(500);
+   const { boardData, players, room } = req.body;
+   if (!boardData || !players || room === undefined || room === null) {
+    res.sendStatus(500);
+   }
    else {
-     const answer = await Board.create({ boardData: boardData, players: players});
+     const answer = await Board.create({ boardData: boardData, players: players, room: room});
      res.status(201);
      res.send(answer);
    }

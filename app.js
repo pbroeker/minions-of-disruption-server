@@ -16,7 +16,11 @@ sio(server);
 
 app.use(json());
 app.use(cookieparser());
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin:'http://localhost:3000'
+}
+));
 app.use(router);
 
 // (async function () {
