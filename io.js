@@ -19,9 +19,10 @@ async function sio (server) {
     console.log('An admin logged in.');
     socket.on('send-game-status', updateGameStatus(playerNamespace, socket))
     socket.on('admin-create-rooms', adminCreateRooms);
-    socket.on('admin-sends-to-all', adminSendMessage(io));
+    socket.on('admin-sends-message', adminSendMessage(io, socket));
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
+    socket.on('send-user-message', sendUserMessage(socket, io));
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
     })
