@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const tokenSchema = new mongoose.Schema({
-  game_id: String,
-  code: Number,
+  game_id: {type: String, required: true, unique: true},
+  code: {type: Number, required: true, unique: true},
   language: String,
   game_version: String
 });
