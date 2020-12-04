@@ -1,16 +1,28 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const PORT = process.env.PORT || 3005;
-const routes = require('./routes');
-require('dotenv').config();
+const db = require('./model/index');
+// const cookieparser = require('cookie-parser');
+// const session = require('express-session');
+const cors = require('cors');
 const sio = require('./io');
+const { json } = require('express');
+const router = require('./routes');
 const app = express();
-app.use(routes);
 
 const server = http.createServer(app);
-
 sio(server);
 
-server.listen(PORT, () => {
-  console.log(`listening on ${PORT}.`)
-})
+app.use(json());
+app.use(cors());
+
+app.use(router);
+
+(async function () {
+  await db;
+  server.listen(PORT, () => {
+    console.log(`listening on ${PORT}.`)
+  })
+}
+)
