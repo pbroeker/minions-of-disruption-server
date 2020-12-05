@@ -24,7 +24,7 @@ const sendRooms = () => {
   return rooms;
 }
 
-const adminSendMessage = (io, socket) => (adminMessage) => {
+const adminSendMessage = (io) => (adminMessage) => {
   console.log(`Admin: Sending message ${adminMessage.message} from ${adminMessage.admin.name}`);
   io.emit('send-user-message', { user: adminMessage.admin, message: adminMessage.message });
   // socket.emit('user-chat-message-to-admin', { user: adminMessage.admin, message: adminMessage.message });
