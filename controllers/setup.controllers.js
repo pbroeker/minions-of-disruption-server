@@ -8,7 +8,7 @@ let rooms = [
 
 let users = [];
 
-const joinRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
+const joinRoom = (adminNamespace, io, socket) => ({ user, roomId, boardId }) => {
   console.log(`user ${user} joined room ${roomId}`);
   const newRooms = clone(rooms);
   newRooms[roomId].players.push(user);
@@ -71,7 +71,7 @@ const startGame = (playerNamespace) => () => {
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users.map((user) => {
     const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
-    return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0 };
+    return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0, boardId : rooms[user.designatedRoom].boardId };
   })
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));

@@ -29,7 +29,7 @@ exports.updateToken = async (req, res) => {
     const code = req.params.token;
     const boardId = req.params.boardId;
     const answer = await Token.findOneAndUpdate({ code: code }, {$push: { boardIds: boardId}}, {new: true});
-    res.status(201);
+    res.status(200);
     res.send({answer})
   } catch (error) {
     console.log(error);
@@ -43,7 +43,6 @@ exports.checkToken = async (req, res) => {
     const code = req.params.token;
     const answer = await Token.findOne({ code: code });
     req.session.loggedIn = true;
-    // req.session.token = answer.code;
     res.status(200);
     res.send({answer})
   } catch (error) {

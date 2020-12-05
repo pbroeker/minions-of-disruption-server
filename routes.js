@@ -18,5 +18,4 @@ router.get('/board/:id', loadBoard);
 router.put('/board/:id', updateBoard);
 
 router.get('/checksession', checkSession)
-
 module.exports = router;
