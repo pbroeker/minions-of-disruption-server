@@ -34,7 +34,7 @@ app.use(router);
 
 // (async function () {
 //   await db;
-  server.listen(PORT, () => {
-    console.log(`listening on ${PORT}.`)
-  })
+server.listen(PORT, () => {
+  console.log(`🍍🍕 listening on ${PORT}. 🍕🍍`)
+})
 // })

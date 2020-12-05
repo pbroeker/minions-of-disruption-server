@@ -70,34 +70,44 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 const startGame = (playerNamespace) => () => {
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users.map((user) => {
-    const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '' };
-    return {...user, position: 1, role: defaultRole, hand: [] };
+    const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
+    return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0 };
   })
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));
   })
 }
 
-const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
-  const roomId = players[0].designatedRoom;
-  console.log('players array received:', players);
-  console.log('room', roomId);
-  playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
+const updatePlayersInRoom = (adminNamespace, playerNamespace) => ({ players, room }) => {
+  // const roomId = players[0].designatedRoom;
+  playerNamespace.to(`room${room}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
 }
 
-// const updatePlayersInRoom = (adminNamespace, playerNamespace) => (players) => {
-//   const roomId = players[0].designatedRoom;
-//   playerNamespace.to(`room${roomId}`).emit('update-players-in-room', players);
-//   adminNamespace.emit('update-players-in-room', players);
-// }
+const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
+  const updState = { state: boardState, room: roomID }
+  playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
+  adminNamespace.emit('update-state-in-room', updState);
+}
 
-// const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, roomID } ) => {
-//   console.log('state received:', boardState);
-//   console.log('room', roomID);
-//   const updState = { state: boardState, room: roomID }
-//   playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
-//   adminNamespace.emit('update-state-in-room', updState);
-// }
+// Global disruptions
+const globalDisruptionTrigger = (adminNamespace, playerNamespace) => ({ roomID, left } ) => {
+  let toRoom;
+  if (left) {
+    (roomID === 0) ? toRoom = rooms.length - 1 : toRoom = roomID - 1;
+  } else {
+    (roomID === rooms.length - 1) ? toRoom = 0 : toRoom = roomID + 1;
+  }
+  playerNamespace.to(`room${toRoom}`).emit('global-disruption-trigger', {from: toRoom, to: roomID});
+  adminNamespace.emit('global-disruption-trigger', { roomID, toRoom });
+};
 
-module.exports = { startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
+const globalDisruptionResponse = (adminNamespace, playerNamespace) => (state) => {
+  playerNamespace.to(`room${state.to}`).emit('global-disruption-response', state);
+}
+
+const globalDisruptionAfterChoice = (adminNamespace, playerNamespace) => ({ position, to }) => {
+  playerNamespace.to(`room${to}`).emit('global-disruption-choice', position);
+}
+
+module.exports = { globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
