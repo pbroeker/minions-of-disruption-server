@@ -12,5 +12,5 @@ const server = http.createServer(app);
 sio(server);
 
 server.listen(PORT, () => {
-  console.log(`🍍🍍 listening on ${PORT}. 🍕🍕`)
+  console.log(`🍍🍕 listening on ${PORT}. 🍕🍍`)
 })

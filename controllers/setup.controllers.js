@@ -94,4 +94,24 @@ const updateStateInRoom = (adminNamespace, playerNamespace) => ( {boardState, ro
   adminNamespace.emit('update-state-in-room', updState);
 }
 
-module.exports = { updateStateInRoom, startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
+// Global disruptions
+const globalDisruptionTrigger = (adminNamespace, playerNamespace) => ({ roomID, left } ) => {
+  let toRoom;
+  if (left) {
+    (roomID === 0) ? toRoom = rooms.length - 1 : toRoom = roomID - 1;
+  } else {
+    (roomID === rooms.length - 1) ? toRoom = 0 : toRoom = roomID + 1;
+  }
+  playerNamespace.to(`room${toRoom}`).emit('global-disruption-trigger', {from: toRoom, to: roomID});
+  adminNamespace.emit('global-disruption-trigger', { roomID, toRoom });
+};
+
+const globalDisruptionResponse = (adminNamespace, playerNamespace) => (state) => {
+  playerNamespace.to(`room${state.to}`).emit('global-disruption-response', state);
+}
+
+const globalDisruptionAfterChoice = (adminNamespace, playerNamespace) => ({ position, to }) => {
+  playerNamespace.to(`room${to}`).emit('global-disruption-choice', position);
+}
+
+module.exports = { globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
