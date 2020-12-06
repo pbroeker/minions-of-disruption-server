@@ -110,4 +110,31 @@ const globalDisruptionAfterChoice = (adminNamespace, playerNamespace) => ({ posi
   playerNamespace.to(`room${to}`).emit('global-disruption-choice', position);
 }
 
-module.exports = { globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, startGame, updateGameStatus, adminSendMessage, joinRoom ,sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom};
+const askForPermission = (playerNamespace) => ({ askerSeat, answerSeat, position, room }) => {
+  console.log('ask for permission hit backend --->', askerSeat, answerSeat, position, room);
+  playerNamespace.to(`room${room}`).emit('ask-for-premission-to-move', { askerSeat, answerSeat, position });
+}
+
+const sendPermission = (playerNamespace) => ({ answerSeat, answer, position, room }) => {
+  console.log('send permission hit backend --->', answerSeat, answer, position, room);
+  playerNamespace.to(`room${room}`).emit('send-permission-to-move', { answerSeat, answer, position });
+}
+
+module.exports = {
+  sendPermission,
+  askForPermission,
+  globalDisruptionAfterChoice, 
+  globalDisruptionResponse, 
+  globalDisruptionTrigger, 
+  updateStateInRoom, 
+  startGame, 
+  updateGameStatus, 
+  adminSendMessage, 
+  joinRoom, 
+  sendRooms, 
+  leaveRoom, 
+  sendUserMessage, 
+  updatePlayers, 
+  adminCreateRooms, 
+  updatePlayersInRoom
+};
