@@ -70,7 +70,7 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 const startGame = (playerNamespace) => () => {
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users.map((user) => {
-    const defaultRole = { name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
+    const defaultRole = { id: 10, name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
     return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0, boardId : rooms[user.designatedRoom].boardId };
   })
   rooms.forEach((room) => {
