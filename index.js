@@ -12,7 +12,6 @@ const router = require('./routes');
 const app = express();
 
 const server = http.createServer(app);
-sio(server);
 
 app.use(json());
 app.use(cookieparser());
@@ -22,6 +21,8 @@ app.use(cors({
   methods: ['GET', 'PUT', 'POST']
 }
 ));
+
+sio(server);
 
 app.use(session({
   secret: 'keyboard cat',
