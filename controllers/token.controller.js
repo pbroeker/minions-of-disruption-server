@@ -1,5 +1,5 @@
 const Token = require('../model/token.model');
-const { createCode } = require('../services/token.provider');
+const { createCode } = require('../Utils/token.provider');
 
 exports.createToken = async (req, res) => {
   try {
