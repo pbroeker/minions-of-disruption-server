@@ -15,13 +15,13 @@ const server = http.createServer(app);
 
 app.use(json());
 app.use(cookieparser());
-app.use(cors({
-  credentials: true,
-  origin:'*',
-  methods: ['GET', 'PUT', 'POST']
-}
-));
-
+// app.use(cors({
+//   credentials: true,
+//   origin:'*',
+//   methods: ['GET', 'PUT', 'POST']
+// }
+// ));
+app.use(cors());
 sio(server);
 
 app.use(session({

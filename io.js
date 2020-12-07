@@ -1,7 +1,5 @@
 const socketIo = require('socket.io');
 const {
-  updateUsers,
-  setStart,
   globalDisruptionAfterChoice,
   globalDisruptionResponse,
   globalDisruptionTrigger,
@@ -23,8 +21,8 @@ async function sio (server) {
 
   const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:*",
-      methods: ["GET", "POST", "PUT"]
+      origin: "*",
+      // methods: ["GET", "POST", "PUT"]
     }
   });
 
