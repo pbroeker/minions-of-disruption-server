@@ -16,14 +16,12 @@ sio(server);
 
 app.use(json());
 app.use(cookieparser());
-// app.use(cors({
-//   credentials: true,
-//   origin:'http://localhost:3000/',
-//   methods: ['GET', 'PUT', 'POST']
-// }
-// ));
-
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin:'*',
+  methods: ['GET', 'PUT', 'POST']
+}
+));
 
 app.use(session({
   secret: 'keyboard cat',
