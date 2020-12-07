@@ -38,7 +38,7 @@ async function sio (server) {
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));
     socket.on('emission-raise', raiseEmissions (playerNamespace));
-    socket.on('set-start-data', setStart);
+    // socket.on('set-start-data', setStart);
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
     })
