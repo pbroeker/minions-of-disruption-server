@@ -24,10 +24,9 @@ async function sio (server) {
   const io = socketIo(server, {
     cors: {
       origin: "*",
-      method: ["GET", "POST"]
+      methods: ["GET", "POST"]
     }
-  }
-);
+  });
 
   const adminNamespace = io.of('/admin');
   const playerNamespace = io.of('');
