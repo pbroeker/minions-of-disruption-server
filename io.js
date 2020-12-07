@@ -1,5 +1,5 @@
 const socketIo = require('socket.io');
-const { sendPermission, askForPermission, globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, updateGameStatus, startGame, joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom } = require('./controllers/setup.controllers');
+const { theGrandAllianceFinal, theGrandAllianceOffer, theGrandAllianceTrigger, sendPermission, askForPermission, globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, updateGameStatus, startGame, joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom } = require('./controllers/setup.controllers');
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
@@ -42,6 +42,9 @@ async function sio (server) {
     socket.on('global-disruption-choice', globalDisruptionAfterChoice(adminNamespace, socket));
     socket.on('ask-for-premission-to-move', askForPermission(socket));
     socket.on('send-permission-to-move', sendPermission(socket));
+    socket.on('grand-alliance-trigger', theGrandAllianceTrigger(io, socket));
+    socket.on('grand-alliance-offer', theGrandAllianceOffer(socket));
+    socket.on('grand-alliance-final', theGrandAllianceFinal(io));
 
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
