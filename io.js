@@ -23,8 +23,8 @@ async function sio (server) {
 
   const io = socketIo(server, {
     cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
+      origin: "http://localhost:*",
+      methods: ["GET", "POST", "PUT"]
     }
   });
 

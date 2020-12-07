@@ -134,5 +134,6 @@ module.exports = {
   sendUserMessage, 
   updatePlayers, 
   adminCreateRooms, 
-  updatePlayersInRoom
+  updatePlayersInRoom,
+  updatedUsers,
 };
