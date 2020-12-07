@@ -19,12 +19,7 @@ const {
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
-  const io = socketIo(server, {
-    cors: {
-      origin: "*",
-      // methods: ["GET", "POST", "PUT"]
-    }
-  });
+  const io = socketIo(server);
 
   const adminNamespace = io.of('/admin');
   const playerNamespace = io.of('');
