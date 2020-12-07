@@ -1,14 +1,31 @@
 const socketIo = require('socket.io');
-const { theGrandAllianceFinal, theGrandAllianceOffer, theGrandAllianceTrigger, sendPermission, askForPermission, globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, updateGameStatus, startGame, joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom } = require('./controllers/setup.controllers');
+const {
+  theGrandAllianceFinal, 
+  theGrandAllianceOffer, 
+  theGrandAllianceTrigger, 
+  sendPermission, 
+  askForPermission,
+  globalDisruptionAfterChoice,
+  globalDisruptionResponse,
+  globalDisruptionTrigger,
+  updateStateInRoom,
+  updateGameStatus,
+  startGame,
+  joinRoom,
+  sendRooms,
+  leaveRoom,
+  updatePlayers,
+  adminCreateRooms,
+  updatePlayersInRoom
+} = require('./controllers/setup.controllers');
+const { sendUserMessage } = require('./controllers/chat.socket.controller');
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
   const io = socketIo(server, {
     cors: {
-      // TODO: Change to the client
-      // TODO: Add credentials: true and headers on deployment
-      origin: "http://localhost:3000",
-      methods: ["GET", "POST"]
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST']
     }
   });
 
@@ -19,11 +36,11 @@ async function sio (server) {
     console.log('An admin logged in.');
     socket.on('send-game-status', updateGameStatus(playerNamespace, socket))
     socket.on('admin-create-rooms', adminCreateRooms);
-    socket.on('admin-sends-message', adminSendMessage(io));
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));
-    socket.on('emission-raise', raiseEmissions (playerNamespace))
+    socket.on('emission-raise', raiseEmissions (playerNamespace));
+    // socket.on('set-start-data', setStart);
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
     })

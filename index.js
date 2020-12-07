@@ -12,18 +12,17 @@ const router = require('./routes');
 const app = express();
 
 const server = http.createServer(app);
-sio(server);
 
 app.use(json());
 app.use(cookieparser());
 // app.use(cors({
 //   credentials: true,
-//   origin:'http://localhost:3000/',
+//   origin:'*',
 //   methods: ['GET', 'PUT', 'POST']
 // }
 // ));
-
 app.use(cors());
+sio(server);
 
 app.use(session({
   secret: 'keyboard cat',

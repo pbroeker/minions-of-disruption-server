@@ -1,21 +1,28 @@
+const roomNames = ['Awesome', 'Brilliant', 'Creative', 'Progressive', 'Diligent', 'Extreme'];
 const Board = require('../model/board.model');
 
 exports.saveBoard = async (req, res) => {
- try {
-   const { boardData, players, room, tokenId } = req.body;
-   if (!boardData || !players || room === undefined || room === null || !tokenId) {
-    res.sendStatus(500);
-   }
-   else {
-     const answer = await Board.create({
-       tokenId: tokenId,
-       boardData: boardData,
-       players: players,
-       room: room});
-     res.status(201);
-     res.send(answer);
-   }
- } catch (error) {
+  try {
+    const { roomNumber, tokenId } = req.body;
+    if (!roomNumber || !tokenId) {
+      res.sendStatus(500);
+    } 
+    else {
+      const rooms = [];
+      for (let i = 0; i < roomNumber; i++) {
+        rooms.push({
+          boardData : JSON.stringify(mockBoard),
+          name: roomNames[i],
+          players: JSON.stringify([]),
+          id: i,
+          tokenId: tokenId,
+        })
+      }
+      const answer = await Board.insertMany(rooms);
+      res.status(201);
+      res.send(answer);
+    }
+  } catch (error) {
   console.log(error);
   res.status(500);
   res.send(error);
@@ -25,6 +32,7 @@ exports.saveBoard = async (req, res) => {
 exports.loadBoard = async (req, res) => {
   try {
     const id = req.params.id;
+    console.log('finding game with id: ', id);
     const answer = await Board.findById(id);
     res.status(200);  
     res.send(answer);
@@ -54,3 +62,38 @@ exports.updateBoard = async (req, res) => {
     res.send(error);   
   }
 }
+
+exports.getBoards = async (req, res) => {
+  try {
+    const token = req.params.token;
+    console.log('token is:', token);
+    if (!token) res.sendStatus(500);
+    else {
+      const answer = await Board.find({ tokenId : token });
+      res.status(201);
+      res.send(answer);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);   
+  }
+}
+
+const mockBoard = {
+  score: 0,
+  escalation: 0,
+  carbions: 3,
+  climmies: 7,
+  coins: 3,
+  pathwayTokens: [],
+  shields: [],
+  initiativeDeck: [],
+  discardedInitiativeCards: [],
+  disruptionDeck: [],
+  discardedDisruptionCards: [],
+  hotspots: [],
+  currentDisruption: undefined,
+  activeSeat: 0,
+  roundCount: 1,
+};
