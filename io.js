@@ -22,12 +22,21 @@ const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
   const io = socketIo(server, {
-    cors: {
-      // TODO: Change to the client
-      // TODO: Add credentials: true and headers on deployment
-      origin: "http://localhost:3000",
-      methods: ["GET", "POST"]
+    handlePreflightRequest: (req, res) => {
+      const headers = {
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Origin": req.headers.origin,
+        "Access-Control-Allow-Credentials": true
+      };
+      res.writeHead(200, headers);
+      res.end();
     }
+    // cors: {
+    //   // TODO: Change to the client
+    //   // TODO: Add credentials: true and headers on deployment
+    //   origin: "*",
+    //   methods: ["GET", "POST", "PUT"]
+    // }
   });
 
   const adminNamespace = io.of('/admin');
@@ -60,7 +69,6 @@ async function sio (server) {
     socket.on('global-disruption-response', globalDisruptionResponse(adminNamespace, socket));
     socket.on('global-disruption-choice', globalDisruptionAfterChoice(adminNamespace, socket));
     socket.on('update-users', updateUsers(adminNamespace, socket));
-
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
     });
