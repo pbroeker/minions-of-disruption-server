@@ -1,5 +1,23 @@
 const socketIo = require('socket.io');
-const { sendPermission, askForPermission, globalDisruptionAfterChoice, globalDisruptionResponse, globalDisruptionTrigger, updateStateInRoom, updateGameStatus, startGame, joinRoom, adminSendMessage, sendRooms, leaveRoom, sendUserMessage, updatePlayers, adminCreateRooms, updatePlayersInRoom } = require('./controllers/setup.controllers');
+const {
+  updateUsers,
+  setStart,
+  globalDisruptionAfterChoice,
+  globalDisruptionResponse,
+  globalDisruptionTrigger,
+  updateStateInRoom,
+  updateGameStatus,
+  startGame,
+  joinRoom,
+  adminSendMessage,
+  sendRooms,
+  leaveRoom,
+  sendUserMessage,
+  updatePlayers,
+  adminCreateRooms,
+  updatePlayersInRoom
+} = require('./controllers/setup.controllers');
+
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
@@ -23,14 +41,15 @@ async function sio (server) {
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));
-    socket.on('emission-raise', raiseEmissions (playerNamespace))
+    socket.on('emission-raise', raiseEmissions (playerNamespace));
+    socket.on('set-start-data', setStart);
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
     })
   });
   playerNamespace.on('connection', (socket) => { 
     console.log('Player connected' + socket.client.id);
-    socket.emit('send-rooms', sendRooms());
+    
     socket.on('join-room', joinRoom(adminNamespace, io, socket));
     socket.on('leave-room', leaveRoom(adminNamespace, io, socket));
     socket.on('send-user-message', sendUserMessage(adminNamespace, io));
@@ -40,8 +59,7 @@ async function sio (server) {
     socket.on('global-disruption-trigger', globalDisruptionTrigger(adminNamespace, socket));
     socket.on('global-disruption-response', globalDisruptionResponse(adminNamespace, socket));
     socket.on('global-disruption-choice', globalDisruptionAfterChoice(adminNamespace, socket));
-    socket.on('ask-for-premission-to-move', askForPermission(socket));
-    socket.on('send-permission-to-move', sendPermission(socket));
+    socket.on('update-users', updateUsers(adminNamespace, socket));
 
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);

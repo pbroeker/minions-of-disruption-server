@@ -27,8 +27,6 @@ const sendRooms = () => {
 const adminSendMessage = (io) => (adminMessage) => {
   console.log(`Admin: Sending message ${adminMessage.message} from ${adminMessage.admin.name}`);
   io.emit('send-user-message', { user: adminMessage.admin, message: adminMessage.message });
-  // socket.emit('user-chat-message-to-admin', { user: adminMessage.admin, message: adminMessage.message });
-  // io.emit('user-chat-message', { player: { name: 'Admin' }, message: message })
 }
 
 const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
