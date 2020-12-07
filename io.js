@@ -55,7 +55,7 @@ async function sio (server) {
     socket.on('global-disruption-trigger', globalDisruptionTrigger(adminNamespace, socket));
     socket.on('global-disruption-response', globalDisruptionResponse(adminNamespace, socket));
     socket.on('global-disruption-choice', globalDisruptionAfterChoice(adminNamespace, socket));
-    socket.on('update-users', updateUsers(adminNamespace, socket));
+    // socket.on('update-users', updateUsers(adminNamespace, socket));
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
     });
