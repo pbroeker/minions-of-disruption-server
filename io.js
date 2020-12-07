@@ -7,15 +7,13 @@ const {
   updateGameStatus,
   startGame,
   joinRoom,
-  adminSendMessage,
   sendRooms,
   leaveRoom,
-  sendUserMessage,
   updatePlayers,
   adminCreateRooms,
   updatePlayersInRoom
 } = require('./controllers/setup.controllers');
-
+const { sendUserMessage } = require('./controllers/chat.socket.controller');
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
@@ -33,7 +31,6 @@ async function sio (server) {
     console.log('An admin logged in.');
     socket.on('send-game-status', updateGameStatus(playerNamespace, socket))
     socket.on('admin-create-rooms', adminCreateRooms);
-    socket.on('admin-sends-message', adminSendMessage(io));
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));

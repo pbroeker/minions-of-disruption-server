@@ -19,12 +19,6 @@ const sendRooms = () => {
   return rooms;
 }
 
-
-const adminSendMessage = (io) => (adminMessage) => {
-  console.log(`Admin: Sending message ${adminMessage.message} from ${adminMessage.admin.name}`);
-  io.emit('send-user-message', { user: adminMessage.admin, message: adminMessage.message });
-}
-
 const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
   users = users.filter(player => player.name != user.name)
   console.log(`user ${user} left room ${roomId}`);
@@ -37,12 +31,6 @@ const leaveRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
   adminNamespace.emit('send-rooms', newRooms);
   socket.in(`room${roomId}`).emit('player-left-a-room' ,`Player ${user.name} joined  this room`);
 }
-
-const sendUserMessage = (adminNamespace, io) => ({ user, message}) => {
-  console.log(`User: sending message ${message} from ${user.name} to ${user.designatedRoom}.`);
-  io.to(`room${user.designatedRoom}`).emit('send-user-message', { user:user, message: message });
-  adminNamespace.emit('send-user-message', { user: user, message: message });
-};
 
 const updatePlayers = (adminNamespace, socket) => (player) => {
   const newPlayers = users.filter((oldPlayer) => oldPlayer.name !== player.name)
@@ -125,11 +113,9 @@ module.exports = {
   updateStateInRoom, 
   startGame, 
   updateGameStatus, 
-  adminSendMessage, 
   joinRoom, 
   sendRooms, 
   leaveRoom, 
-  sendUserMessage, 
   updatePlayers, 
   adminCreateRooms, 
   updatePlayersInRoom,
