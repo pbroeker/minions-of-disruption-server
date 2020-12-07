@@ -21,23 +21,13 @@ const {
 const { raiseEmissions } = require('./controllers/environment.controller');
 async function sio (server) {
 
-  const io = socketIo(server
-    // handlePreflightRequest: (req, res) => {
-    //   const headers = {
-    //     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    //     "Access-Control-Allow-Origin": req.headers.origin,
-    //     "Access-Control-Allow-Credentials": true
-    //   };
-    //   res.writeHead(200, headers);
-    //   res.end();
-    // }
-    // cors: {
-    //   // TODO: Change to the client
-    //   // TODO: Add credentials: true and headers on deployment
-    //   origin: "*",
-    //   methods: ["GET", "POST", "PUT"]
-    // }
-  );
+  const io = socketIo(server, {
+    cors: {
+      origin: "*",
+      method: ["GET", "POST"]
+    }
+  }
+);
 
   const adminNamespace = io.of('/admin');
   const playerNamespace = io.of('');
