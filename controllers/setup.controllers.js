@@ -1,11 +1,6 @@
 const clone = require('rfdc')()
 
-let rooms = [
-  { name: 'room1', id: 0, players: [] },
-  { name: 'room2', id: 1, players: [] },
-  { name: 'room3', id: 2, players: [] },
-];
-
+let rooms = [];
 let users = [];
 
 const joinRoom = (adminNamespace, io, socket) => ({ user, roomId, boardId }) => {
@@ -23,6 +18,7 @@ const joinRoom = (adminNamespace, io, socket) => ({ user, roomId, boardId }) => 
 const sendRooms = () => {
   return rooms;
 }
+
 
 const adminSendMessage = (io) => (adminMessage) => {
   console.log(`Admin: Sending message ${adminMessage.message} from ${adminMessage.admin.name}`);
@@ -57,7 +53,9 @@ const updatePlayers = (adminNamespace, socket) => (player) => {
 }
 
 const adminCreateRooms = (roomObjects) => {
+  console.log('rooms before admin sent them: ', rooms);
   rooms = roomObjects;
+  console.log('rooms after admin created them: ', rooms);
 }
 
 const updateGameStatus = (playerNamespace, socket) => (status) => {

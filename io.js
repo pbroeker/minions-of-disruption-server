@@ -45,7 +45,7 @@ async function sio (server) {
   });
   playerNamespace.on('connection', (socket) => { 
     console.log('Player connected' + socket.client.id);
-    
+    socket.emit('send-rooms', sendRooms());
     socket.on('join-room', joinRoom(adminNamespace, io, socket));
     socket.on('leave-room', leaveRoom(adminNamespace, io, socket));
     socket.on('send-user-message', sendUserMessage(adminNamespace, io));
