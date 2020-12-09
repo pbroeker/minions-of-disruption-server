@@ -101,7 +101,7 @@ const askForPermission = (playerNamespace) => ({ askerSeat, answerSeat, position
 
 const sendPermission = (playerNamespace) => ({ answerSeat, answer, position, room }) => {
   console.log('send permission hit backend --->', answerSeat, answer, position, room);
-  playerNamespace.to(`room${room}`).emit('send-permission-to-move', { answerSeat, answer, position });
+  playerNamespace.to(`room${room}`).emit('send-permission-to-move', { answerSeat: answerSeat, answer: answer, position: position });
 }
 
 const theGrandAllianceTrigger = (io, playerNamespace) => ({ room, amount }) => {
@@ -115,6 +115,11 @@ const theGrandAllianceOffer = (playerNamespace) => ({ amount, room }) => {
 
 const theGrandAllianceFinal = (io) => ({ success }) => {
   io.sockets.emit('grand-alliance-final', success);
+}
+
+const tutorialReady = (playerNamespace) => ({ room }) => {
+  console.log('tutorial ready backend');
+  playerNamespace.to(`room${room}`).emit('tutorial-ready', room)
 }
 
 module.exports = {
@@ -134,5 +139,6 @@ module.exports = {
   updatePlayersInRoom,
   theGrandAllianceTrigger,
   theGrandAllianceOffer,
-  theGrandAllianceFinal
+  theGrandAllianceFinal,
+  tutorialReady
 };

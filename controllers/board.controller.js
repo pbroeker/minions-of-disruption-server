@@ -1,4 +1,3 @@
-const roomNames = ['Awesome', 'Brilliant', 'Creative', 'Progressive', 'Diligent', 'Extreme'];
 const Board = require('../model/board.model');
 
 exports.saveBoard = async (req, res) => {
@@ -9,6 +8,7 @@ exports.saveBoard = async (req, res) => {
     } 
     else {
       const rooms = [];
+      const roomNames = shuffleNames(roomNamesInit);
       for (let i = 0; i < roomNumber; i++) {
         rooms.push({
           boardData : JSON.stringify(mockBoard),
@@ -97,3 +97,47 @@ const mockBoard = {
   activeSeat: 0,
   roundCount: 1,
 };
+
+const roomNamesInit = [
+  'Community',
+  'Ecstatic',
+  'Sharing',
+  'Eclectic',
+  'Exquisite',
+  'Giving',
+  'Thriving',
+  'Committed',
+  'Enthusiastic',
+  'Original',
+  'Magical',
+  'Glorious',
+  'Thankful',
+  'Enchanting',
+  'Pure',
+  'Dazzling',
+  'Expansive',
+  'Bountiful',
+  'Adventurous',
+  'Elated',
+  'Humble',
+  'Liberated',
+  'Fortified',
+  'Grateful',
+  'Creative',
+  'Awakening',
+  'Harmonious',
+  'Lovely',
+  'Gentle',
+  'Serene',
+  'Kind',
+  'Joyful',
+  'Delighted',
+];
+
+function shuffleNames(list) {
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list;
+}
