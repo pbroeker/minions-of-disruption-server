@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const PORT = process.env.PORT || 3005;
-const db = require('./model/index');
 const cookieparser = require('cookie-parser');
 const session = require('express-session');
 const cors = require('cors');

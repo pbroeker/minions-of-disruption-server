@@ -18,7 +18,9 @@ exports.saveBoard = async (req, res) => {
           tokenId: tokenId,
         })
       }
+      console.log('rooms to be created: ', rooms);
       const answer = await Board.insertMany(rooms);
+      console.log('anser should be: ', answer);
       res.status(201);
       res.send(answer);
     }
