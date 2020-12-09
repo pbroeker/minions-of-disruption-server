@@ -7,6 +7,13 @@ const joinRoom = (adminNamespace, io, socket) => ({ user, roomId }) => {
   const newRooms = clone(rooms);
   newRooms[roomId].players.push(user);
   rooms = newRooms;
+
+  // console.log('users original', users)
+  const newUsers = users.filter((el) => el.name !== user.name);
+  users = [...newUsers];
+  // console.log('users array after upd', users);
+  // console.log('new users array', newUsers);
+
   users.push(user);  
   socket.join(`room${roomId}`);
   io.emit('send-rooms', newRooms);
@@ -50,10 +57,14 @@ const updateGameStatus = (playerNamespace, socket) => (status) => {
 
 const startGame = (playerNamespace) => () => {
   const colors = ['blue', 'red', 'green', 'orange'];
+  // console.log('users', users);
   const updatedUsers = users.map((user) => {
-    const defaultRole = { id: 10, name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
-    return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0, boardId : rooms[user.designatedRoom].boardId };
-  })
+    if (user.designatedRoom !== undefined) {
+      const defaultRole = { id: 10, name: 'default', description: '', color: colors[user.seat], power: '', image: '' };
+      return {...user, position: 1, role: defaultRole, hand: [], remainingActions: 0, boardId : rooms[user.designatedRoom].boardId };
+    }
+  }).filter((el) => el !== undefined || el !== false);
+  // console.log('updatedUsers', updatedUsers);
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit('start-the-game', updatedUsers.filter((user) => user.designatedRoom === room.id));
   })

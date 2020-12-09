@@ -11,7 +11,7 @@ async function connectDB () {
         useFindAndModify: true,
         useCreateIndex: true,
       });
-      console.log('successfully connected')
+      console.log('⛵ successfully connected 🚣')
   } catch (error) {
     console.log(error);
   }
