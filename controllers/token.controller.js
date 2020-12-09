@@ -27,8 +27,9 @@ exports.createToken = async (req, res) => {
 exports.updateToken = async (req, res) => {
   try {
     const code = req.params.token;
-    const boardId = req.params.boardId;
-    const answer = await Token.findOneAndUpdate({ code: code }, {$push: { boardIds: boardId}}, {new: true});
+    const { rooms } = req.body;
+    let boardIds = rooms.map((room) => {return room._id});
+    const answer = await Token.findOneAndUpdate({ code: code }, {$set: { boardIds: boardIds}}, {new: true});
     res.status(200);
     res.send({answer})
   } catch (error) {
