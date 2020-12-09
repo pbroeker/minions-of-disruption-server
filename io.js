@@ -16,7 +16,8 @@ const {
   leaveRoom,
   updatePlayers,
   adminCreateRooms,
-  updatePlayersInRoom
+  updatePlayersInRoom,
+  tutorialReady
 } = require('./controllers/setup.controllers');
 const { sendUserMessage } = require('./controllers/chat.socket.controller');
 const { raiseEmissions } = require('./controllers/environment.controller');
@@ -61,6 +62,7 @@ async function sio (server) {
     socket.on('grand-alliance-trigger', theGrandAllianceTrigger(io, socket));
     socket.on('grand-alliance-offer', theGrandAllianceOffer(socket));
     socket.on('grand-alliance-final', theGrandAllianceFinal(io));
+    socket.on('tutorial-ready', tutorialReady(socket));
 
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
