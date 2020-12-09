@@ -1,5 +1,5 @@
 const session = require('express-session');
-const Board = require('../model/board.model');
+// const Board = require('../model/board.model');
 
 exports.checkSession = async (req, res) => {
   try {
