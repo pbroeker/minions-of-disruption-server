@@ -5,7 +5,6 @@ const { checkToken, createToken, updateToken, getAllTokens } = require('./contro
 const { saveBoard, loadBoard, updateBoard, getBoards } = require('./controllers/board.controller');
 const { checkSession } = require('./controllers/session.controller');
 // router.get('/check', landingPage);
-
 // router.post('/login', adminLogin);
   
 router.get('/token/:token', checkToken);

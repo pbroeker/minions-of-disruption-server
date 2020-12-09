@@ -9,7 +9,8 @@ const sio = require('./io');
 const { json } = require('express');
 const router = require('./routes');
 const app = express();
-
+const db = require('./model/index');
+  
 const server = http.createServer(app);
 
 app.use(json());
@@ -32,9 +33,10 @@ app.use(session({
 
 app.use(router);
 
-// (async function () {
-//   await db;
-server.listen(PORT, () => {
+(async function () {
+  await db();
+  server.listen(PORT, () => {
   console.log(`🍍🍕 listening on ${PORT}. 🍕🍍`)
-})
-// })
+  })
+})()
+
