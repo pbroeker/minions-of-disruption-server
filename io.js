@@ -17,10 +17,12 @@ const {
   updatePlayers,
   adminCreateRooms,
   updatePlayersInRoom,
-  tutorialReady
+  tutorialReady,
+  resetUsers,
 } = require('./controllers/setup.controllers');
 const { sendUserMessage } = require('./controllers/chat.socket.controller');
 const { raiseEmissions } = require('./controllers/environment.controller');
+const { setTutorial } = require('./controllers/admin.socket.controller');
 async function sio (server) {
 
   const io = socketIo(server, {
@@ -40,10 +42,12 @@ async function sio (server) {
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));
-    socket.on('emission-raise', raiseEmissions (playerNamespace));
+    socket.on('emission-raise', raiseEmissions(playerNamespace));
+    socket.on('set-tutorial', setTutorial(socket,io));
+    socket.on('reset-users', resetUsers);
     socket.on('disconnect',() => {
       console.log(`admin disconnected: ${socket.id}.`)
-    })
+    });
   });
   playerNamespace.on('connection', (socket) => { 
     console.log('Player connected' + socket.client.id);

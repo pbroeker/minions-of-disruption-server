@@ -130,6 +130,12 @@ const tutorialReady = (playerNamespace) => ({ room }) => {
   playerNamespace.to(`room${room}`).emit('tutorial-ready', room)
 }
 
+const resetUsers = () => {
+  console.log('resetting users. Users before: ', users);
+  users = [];
+  console.log('resetting users. Users after: ', users);
+} 
+
 module.exports = {
   sendPermission,
   askForPermission,
@@ -148,5 +154,6 @@ module.exports = {
   theGrandAllianceTrigger,
   theGrandAllianceOffer,
   theGrandAllianceFinal,
-  tutorialReady
+  tutorialReady,
+  resetUsers,
 };
