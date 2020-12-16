@@ -31,11 +31,3 @@ export type Role = {
   color: string;
   power: string;
 };
-
-// export interface Board {
-
-// }
-
-// export interface ServerCTX {
-
-// };

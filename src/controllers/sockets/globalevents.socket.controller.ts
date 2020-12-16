@@ -1,7 +1,7 @@
 import { Namespace, Socket } from 'socket.io';
 
 // Global disruptions
-
+// TODO: Take care of any in state
 const globalDisruptionResponse = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => (
   state: any
 ): void => {

@@ -1,6 +1,6 @@
 import rfdc from 'rfdc';
 import { Namespace, Server, Socket } from 'socket.io';
-import { User, Room, Player } from '../Interfaces/Server.types';
+import { User, Room, Player } from '../../Interfaces/Server.types';
 
 const clone = rfdc();
 let rooms: Room[] = [];

@@ -1,5 +1,5 @@
 import { Namespace, Socket } from 'socket.io';
-import { Player, Room } from '../Interfaces/Server.types';
+import { Player, Room } from '../../Interfaces/Server.types';
 
 interface PermissionType {
   answerSeat: number;

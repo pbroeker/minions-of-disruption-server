@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Board from '../model/board.model';
+import Board from '../../model/board.model';
 
 const saveBoard = async (req: Request, res: Response): Promise<void> => {
   try {

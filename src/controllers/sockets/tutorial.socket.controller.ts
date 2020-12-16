@@ -1,8 +1,7 @@
 import { Namespace, Server } from 'socket.io';
-import { Room } from '../Interfaces/Server.types';
+import { Room } from '../../Interfaces/Server.types';
 
 const tutorialReady = (playerNamespace: Namespace) => ({ room }: { room: Room }): void => {
-  console.log('tutorial ready backend');
   playerNamespace.to(`room${room}`).emit('tutorial-ready', room);
 };
 

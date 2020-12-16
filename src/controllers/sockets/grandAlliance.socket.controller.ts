@@ -1,5 +1,5 @@
 import { Server, Namespace } from 'socket.io';
-import { Room } from '../Interfaces/Server.types';
+import { Room } from '../../Interfaces/Server.types';
 
 // TODO: add theGrandAlliance from setupController
 

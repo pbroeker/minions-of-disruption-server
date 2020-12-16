@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import Token from '../model/token.model';
-import { createCode } from '../Utils/token.provider';
-import { Room } from '../Interfaces/Server.types';
+import Token from '../../model/token.model';
+import { createCode } from '../../Utils/token.provider';
+import { Room } from '../../Interfaces/Server.types';
 
 const createToken = async (req: Request, res: Response): Promise<void> => {
   try {
