@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const boardSchema = new mongoose.Schema({
-  tokenId: {type: Number, required: true},
+  tokenId: { type: Number, required: true },
   boardData: String,
   name: String,
   players: String,
@@ -10,4 +10,4 @@ const boardSchema = new mongoose.Schema({
 
 const Board = mongoose.model('Board', boardSchema);
 
-module.exports = Board;
+export default Board;

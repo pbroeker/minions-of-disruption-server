@@ -11,4 +11,4 @@ const sendUserMessage = (adminNamespace, io) => ({ user, message, channel }) => 
   }
 };
 
-module.exports = { sendUserMessage }
+export { sendUserMessage };

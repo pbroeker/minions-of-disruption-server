@@ -1,9 +1,9 @@
-const socketIo = require('socket.io');
-const {
-  theGrandAllianceFinal, 
-  theGrandAllianceOffer, 
-  theGrandAllianceTrigger, 
-  sendPermission, 
+import socketIo from 'socket.io';
+import {
+  theGrandAllianceFinal,
+  theGrandAllianceOffer,
+  theGrandAllianceTrigger,
+  sendPermission,
   askForPermission,
   globalDisruptionAfterChoice,
   globalDisruptionResponse,
@@ -19,37 +19,38 @@ const {
   updatePlayersInRoom,
   tutorialReady,
   resetUsers,
-} = require('./controllers/setup.controllers');
-const { sendUserMessage } = require('./controllers/chat.socket.controller');
-const { raiseEmissions } = require('./controllers/environment.controller');
-const { setTutorial } = require('./controllers/admin.socket.controller');
-async function sio (server) {
+} from './controllers/setup.controllers';
+import { sendUserMessage } from './controllers/chat.socket.controller';
+import { raiseEmissions } from './controllers/environment.controller';
+import { setTutorial } from './controllers/admin.socket.controller';
+import { Server } from 'http';
 
-  const io = socketIo(server, {
+async function sio(server: Server): Promise<void> {
+  const io = new socketIo.Server(server, {
     cors: {
       origin: 'http://localhost:3000',
-      methods: ['GET', 'POST']
-    }
+      methods: ['GET', 'POST'],
+    },
   });
 
-  const adminNamespace = io.of('/admin');
-  const playerNamespace = io.of('');
+  const adminNamespace: socketIo.Namespace = io.of('/admin');
+  const playerNamespace: socketIo.Namespace = io.of('');
 
-  adminNamespace.on('connection', socket => {
+  adminNamespace.on('connection', (socket) => {
     console.log('An admin logged in.');
-    socket.on('send-game-status', updateGameStatus(playerNamespace, socket))
+    socket.on('send-game-status', updateGameStatus(playerNamespace, socket));
     socket.on('admin-create-rooms', adminCreateRooms);
     socket.on('update-players', updatePlayers(io));
     socket.on('start-game', startGame(playerNamespace, socket));
     socket.on('send-user-message', sendUserMessage(socket, io));
     socket.on('emission-raise', raiseEmissions(playerNamespace));
-    socket.on('set-tutorial', setTutorial(socket,io));
+    socket.on('set-tutorial', setTutorial(io));
     socket.on('reset-users', resetUsers);
-    socket.on('disconnect',() => {
-      console.log(`admin disconnected: ${socket.id}.`)
+    socket.on('disconnect', () => {
+      console.log(`admin disconnected: ${socket.id}.`);
     });
   });
-  playerNamespace.on('connection', (socket) => { 
+  playerNamespace.on('connection', (socket) => {
     console.log('Player connected' + socket.client.id);
     socket.emit('send-rooms', sendRooms());
     socket.on('join-room', joinRoom(adminNamespace, io, socket));
@@ -71,7 +72,7 @@ async function sio (server) {
     socket.on('disconnect', () => {
       console.log(`user disconnected: ${socket.id}.`);
     });
-  })
+  });
 }
 
-module.exports = sio;
+export default sio;

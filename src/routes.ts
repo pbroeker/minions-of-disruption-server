@@ -1,12 +1,14 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
+import { checkToken, createToken, updateToken, getAllTokens } from './controllers/token.controller';
+import { saveBoard, loadBoard, updateBoard, getBoards } from './controllers/board.controller';
+
+// TODOS: Todo for session implementation
+// import { checkSession } from './controllers/session.controller';
 // const { adminLogin, landingPage } = require('./controllers/login.controller');
-const { checkToken, createToken, updateToken, getAllTokens } = require('./controllers/token.controller');
-const { saveBoard, loadBoard, updateBoard, getBoards } = require('./controllers/board.controller');
-const { checkSession } = require('./controllers/session.controller');
 // router.get('/check', landingPage);
 // router.post('/login', adminLogin);
-  
+
 router.get('/token/:token', checkToken);
 router.post('/token', createToken);
 router.put('/token/:token', updateToken);
@@ -17,5 +19,5 @@ router.get('/board/:id', loadBoard);
 router.put('/board/:id', updateBoard);
 router.get('/boards/:token', getBoards);
 
-router.get('/checksession', checkSession)
+// router.get('/checksession', checkSession);
 module.exports = router;
