@@ -32,25 +32,6 @@ export type Role = {
   power: string;
 };
 
-export interface CallToAll extends AdminAndSocketCall {
-  io: SocketIO.Server;
-}
-
-export interface AdminAndSocketCall {
-  adminNamespace: SocketIO.Namespace;
-  socket: SocketIO.Socket;
-}
-
-export interface AdminAndPlayerCall {
-  adminNamespace: SocketIO.Namespace;
-  playerNamespace: SocketIO.Namespace;
-}
-
-export interface PlayerAndSocketCall {
-  playerNamespace: SocketIO.Namespace;
-  socket: SocketIO.Socket;
-}
-
 // export interface Board {
 
 // }

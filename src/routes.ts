@@ -20,4 +20,4 @@ router.put('/board/:id', updateBoard);
 router.get('/boards/:token', getBoards);
 
 // router.get('/checksession', checkSession);
-module.exports = router;
+export default router;

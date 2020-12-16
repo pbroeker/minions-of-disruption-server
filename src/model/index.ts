@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 // eslint-disable-next-line no-console
 async function connectDB(): Promise<void> {
   try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     await mongoose.connect(process.env.DATABASE_CONNECTION, {
       useNewUrlParser: true,
       useUnifiedTopology: true,

@@ -1,15 +1,6 @@
 import rfdc from 'rfdc';
-import { Namespace } from 'socket.io';
-import {
-  Role,
-  User,
-  Room,
-  Player,
-  AdminAndSocketCall,
-  AdminAndPlayerCall,
-  CallToAll,
-  PlayerAndSocketCall,
-} from '../Interfaces/Server.types';
+import { Namespace, Server, Socket } from 'socket.io';
+import { User, Room, Player } from '../Interfaces/Server.types';
 
 const clone = rfdc();
 let rooms: Room[] = [];
@@ -20,7 +11,7 @@ interface ChangeRoomTypes {
   roomId: number;
 }
 
-const joinRoom = (adminNamespace: Namespace, io: SocketIO.Server, socket: SocketIO.Socket) => ({
+const joinRoom = (adminNamespace: Namespace, io: Server, socket: SocketIO.Socket) => ({
   user,
   roomId,
 }: ChangeRoomTypes): void => {
@@ -45,7 +36,10 @@ const sendRooms = (): Room[] => {
   return rooms;
 };
 
-const leaveRoom = ({ adminNamespace, io, socket }: CallToAll) => ({ user, roomId }: ChangeRoomTypes): void => {
+const leaveRoom = ({ adminNamespace, io, socket }: { adminNamespace: Namespace; io: Server; socket: Socket }) => ({
+  user,
+  roomId,
+}: ChangeRoomTypes): void => {
   users = users.filter((player) => player.name != user.name);
   console.log(`user ${user} left room ${roomId}`);
   const newRooms = clone(rooms);
@@ -58,32 +52,32 @@ const leaveRoom = ({ adminNamespace, io, socket }: CallToAll) => ({ user, roomId
   socket.in(`room${roomId}`).emit('player-left-a-room', `Player ${user.name} joined  this room`);
 };
 
-const updatePlayers = ({ adminNamespace, socket }: AdminAndSocketCall) => (player: User): void => {
+const updatePlayers = ({
+  adminNamespace,
+  playerNamespace,
+}: {
+  adminNamespace: Namespace;
+  playerNamespace: Namespace;
+}) => (player: User): void => {
   const newPlayers = users.filter((oldPlayer) => oldPlayer.name !== player.name);
   newPlayers.push(player);
   users = newPlayers;
   adminNamespace.emit('update-state-players', users);
-  socket.emit('update-state-players', users);
+  playerNamespace.emit('update-state-players', users);
 };
 
 const adminCreateRooms = (roomObjects: Room[]): void => {
   rooms = roomObjects;
 };
 
-const updateGameStatus = ({ playerNamespace, socket }: PlayerAndSocketCall) => (status: boolean): void => {
+const updateGameStatus = ({ playerNamespace, socket }: { playerNamespace: Namespace; socket: Socket }) => (
+  status: boolean
+): void => {
   playerNamespace.emit('update-game-status', status);
   socket.emit('update-game-status', status);
 };
 
-interface UpdatedUser extends User {
-  position: number;
-  role: Role;
-  hand: string[];
-  remainingActions: number;
-  boardId: number;
-}
-
-const startGame = ({ playerNamespace, adminNamespace }: AdminAndPlayerCall) => (): void => {
+const startGame = (playerNamespace: Namespace) => (): void => {
   const colors = ['blue', 'red', 'green', 'orange'];
   const updatedUsers = users
     .map((user) => {
@@ -110,7 +104,7 @@ const startGame = ({ playerNamespace, adminNamespace }: AdminAndPlayerCall) => (
   rooms.forEach((room) => {
     playerNamespace.in(`room${room.id}`).emit(
       'start-the-game',
-      updatedUsers.filter((user) => user.designatedRoom === room.id)
+      updatedUsers.filter((user) => user?.designatedRoom === room.id)
     );
   });
 };
@@ -120,15 +114,15 @@ interface UpdatePlayersTypes {
   room: Room;
 }
 
-const updatePlayersInRoom = ({ adminNamespace, playerNamespace }: AdminAndPlayerCall) => ({
+const updatePlayersInRoom = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => ({
   players,
   room,
 }: UpdatePlayersTypes): void => {
-  playerNamespace.to(`room${room}`).emit('update-players-in-room', players);
+  socket.to(`room${room}`).emit('update-players-in-room', players);
   adminNamespace.emit('update-players-in-room', players);
 };
 
-const updateStateInRoom = ({ adminNamespace, playerNamespace }: AdminAndPlayerCall) => ({
+const updateStateInRoom = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => ({
   boardState,
   roomID,
 }: {
@@ -136,12 +130,12 @@ const updateStateInRoom = ({ adminNamespace, playerNamespace }: AdminAndPlayerCa
   roomID: number;
 }): void => {
   const updState = { state: boardState, room: roomID };
-  playerNamespace.to(`room${roomID}`).emit('update-state-in-room', boardState);
+  socket.to(`room${roomID}`).emit('update-state-in-room', boardState);
   adminNamespace.emit('update-state-in-room', updState);
 };
 
 // Global disruptions
-const globalDisruptionTrigger = ({ adminNamespace, playerNamespace }: AdminAndPlayerCall) => ({
+const globalDisruptionTrigger = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => ({
   roomID,
   left,
 }: {
@@ -154,22 +148,24 @@ const globalDisruptionTrigger = ({ adminNamespace, playerNamespace }: AdminAndPl
   } else {
     roomID === rooms.length - 1 ? (toRoom = 0) : (toRoom = roomID + 1);
   }
-  playerNamespace.to(`room${toRoom}`).emit('global-disruption-trigger', { from: toRoom, to: roomID });
+  socket.to(`room${toRoom}`).emit('global-disruption-trigger', { from: toRoom, to: roomID });
   adminNamespace.emit('global-disruption-trigger', { roomID, toRoom });
 };
 
-const globalDisruptionResponse = ({ adminNamespace, playerNamespace }: AdminAndPlayerCall) => (state: any): void => {
-  playerNamespace.to(`room${state.to}`).emit('global-disruption-response', state);
+const globalDisruptionResponse = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => (
+  state: any
+): void => {
+  socket.to(`room${state.to}`).emit('global-disruption-response', state);
 };
 
-const globalDisruptionAfterChoice = ({ adminNamespace, playerNamespace }: AdminAndPlayerCall) => ({
+const globalDisruptionAfterChoice = ({ adminNamespace, socket }: { adminNamespace: Namespace; socket: Socket }) => ({
   position,
   to,
 }: {
   position: number;
   to: number;
 }): void => {
-  playerNamespace.to(`room${to}`).emit('global-disruption-choice', position);
+  socket.to(`room${to}`).emit('global-disruption-choice', position);
 };
 
 interface PermissionType {
@@ -205,7 +201,7 @@ const sendPermission = (playerNamespace: Namespace) => ({
     .emit('send-permission-to-move', { answerSeat: answerSeat, answer: answer, position: position });
 };
 
-const theGrandAllianceTrigger = (io: SocketIO.Server, playerNamespace: SocketIO.Namespace) => ({
+const theGrandAllianceTrigger = (io: Server, playerNamespace: SocketIO.Namespace) => ({
   room,
   amount,
 }: {
@@ -226,7 +222,7 @@ const theGrandAllianceOffer = (playerNamespace: Namespace) => ({
   playerNamespace.to(`room${room}`).emit('grand-alliance-offer', parseInt(amount));
 };
 
-const theGrandAllianceFinal = (io: SocketIO.Server) => ({ success }: { success: boolean }): void => {
+const theGrandAllianceFinal = (io: Server) => ({ success }: { success: boolean }): void => {
   io.sockets.emit('grand-alliance-final', success);
 };
 

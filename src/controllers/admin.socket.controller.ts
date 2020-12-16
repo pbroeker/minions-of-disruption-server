@@ -1,4 +1,6 @@
-const setTutorial = (io: SocketIO.Server) => (tutorialBool: boolean): void => {
+import { Server } from 'socket.io';
+
+const setTutorial = (io: Server) => (tutorialBool: boolean): void => {
   io.sockets.emit('set-Tutorial', tutorialBool);
 };
 

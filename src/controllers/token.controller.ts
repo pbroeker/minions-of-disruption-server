@@ -10,7 +10,9 @@ const createToken = async (req: Request, res: Response): Promise<void> => {
     if (!language || !game_version) {
       res.sendStatus(500);
     } else {
-      const answer = await Token.create({language: language, game_version: game_version,code: code,});
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const answer = await Token.create({ language: language, game_version: game_version, code: code });
       res.status(201);
       res.send(answer);
     }
