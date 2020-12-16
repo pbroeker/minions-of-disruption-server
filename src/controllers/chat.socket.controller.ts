@@ -1,4 +1,4 @@
-import { Namespace, Server } from 'socket.io';
+import { Namespace } from 'socket.io';
 
 const sendUserMessage = ({
   adminNamespace,

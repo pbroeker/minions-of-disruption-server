@@ -18,9 +18,7 @@ const saveBoard = async (req: Request, res: Response): Promise<void> => {
           tokenId: tokenId,
         });
       }
-      console.log('rooms to be created: ', rooms);
       const answer = await Board.insertMany(rooms);
-      console.log('anser should be: ', answer);
       res.status(201);
       res.send(answer);
     }
@@ -34,7 +32,6 @@ const saveBoard = async (req: Request, res: Response): Promise<void> => {
 const loadBoard = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    console.log('finding game with id: ', id);
     const answer = await Board.findById(id);
     res.status(200);
     res.send(answer);
@@ -65,7 +62,6 @@ const updateBoard = async (req: Request, res: Response): Promise<void> => {
 const getBoards = async (req: Request, res: Response): Promise<void> => {
   try {
     const token = req.params.token;
-    console.log('token is:', token);
     if (!token) res.sendStatus(500);
     else {
       const answer = await Board.find({ tokenId: token });

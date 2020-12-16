@@ -1,28 +1,30 @@
 import socketIo, { Namespace, Socket } from 'socket.io';
 import {
-  theGrandAllianceFinal,
-  theGrandAllianceOffer,
-  theGrandAllianceTrigger,
-  sendPermission,
-  askForPermission,
-  globalDisruptionAfterChoice,
-  globalDisruptionResponse,
   globalDisruptionTrigger,
-  updateStateInRoom,
-  updateGameStatus,
   startGame,
   joinRoom,
   sendRooms,
   leaveRoom,
   updatePlayers,
   adminCreateRooms,
-  updatePlayersInRoom,
-  tutorialReady,
   resetUsers,
 } from './controllers/setup.controllers';
+import { globalDisruptionAfterChoice, globalDisruptionResponse } from './controllers/globalevents.socket.controller';
+import {
+  theGrandAllianceFinal,
+  theGrandAllianceOffer,
+  theGrandAllianceTrigger,
+} from './controllers/grandAlliance.socket.controller';
+import { setTutorial, tutorialReady } from './controllers/tutorial.socket.controller';
+import {
+  sendPermission,
+  askForPermission,
+  updateGameStatus,
+  updatePlayersInRoom,
+  updateStateInRoom,
+} from './controllers/boardlogic.socket.controller';
 import { sendUserMessage } from './controllers/chat.socket.controller';
 import { raiseEmissions } from './controllers/environment.controller';
-import { setTutorial } from './controllers/admin.socket.controller';
 import { Server } from 'http';
 
 async function sio(server: Server): Promise<void> {
