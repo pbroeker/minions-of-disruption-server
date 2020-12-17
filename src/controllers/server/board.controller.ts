@@ -48,7 +48,7 @@ const updateBoard = async (req: Request, res: Response): Promise<void> => {
     const { boardData, players } = req.body;
     if (!boardData || !players || !id) res.sendStatus(500);
     else {
-      const answer = await Board.findByIdAndUpdate(id, { boardData: boardData, players: players }, { new: true });
+      const answer = await Board.findByIdAndUpdate(id, { boardData, players }, { new: true });
       res.status(201);
       res.send(answer);
     }

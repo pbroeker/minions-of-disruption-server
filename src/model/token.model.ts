@@ -1,4 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+
+interface iToken extends Document {
+  code: number;
+  language: string;
+  game_version: string;
+  boardIds?: string[];
+}
 
 const tokenSchema = new mongoose.Schema({
   code: { type: Number, required: true, unique: true },
@@ -7,6 +14,6 @@ const tokenSchema = new mongoose.Schema({
   boardIds: [String],
 });
 
-const Token = mongoose.model('Token', tokenSchema);
+const Token = mongoose.model<iToken>('Token', tokenSchema);
 
 export default Token;
