@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: __dirname + '/.env' });
+dotenv.config();
 import express from 'express';
 import { createServer, Server } from 'http';
 import cookieparser from 'cookie-parser';
@@ -7,7 +7,7 @@ import cors from 'cors';
 import sio from './io';
 import router from './routes';
 import db from './model/index';
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT;
 const app: express.Application = express();
 const server: Server = createServer(app);
 
