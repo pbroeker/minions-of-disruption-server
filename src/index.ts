@@ -7,6 +7,7 @@ import cors from 'cors';
 import sio from './io';
 import router from './routes';
 import db from './model/index';
+import path from 'path';
 const PORT = process.env.PORT;
 const app: express.Application = express();
 const server: Server = createServer(app);
@@ -14,7 +15,7 @@ const server: Server = createServer(app);
 app.use(express.json());
 app.use(cookieparser());
 app.use(cors());
-app.use(express.static('build'));
+app.use('/', express.static(path.join(__dirname, 'build')));
 sio(server);
 app.use(router);
 

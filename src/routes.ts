@@ -15,9 +15,9 @@ import path from 'path';
 //   // res.send('hello');
 // });
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build/index.html'));
-});
+// router.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build/index.html'));
+// });
 
 router.get('/token/:token', checkToken);
 router.post('/token', createToken);
