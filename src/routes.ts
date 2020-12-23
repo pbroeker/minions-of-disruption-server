@@ -11,7 +11,6 @@ import path from 'path';
 // router.post('/login', adminLogin);
 // router.get('/checksession', checkSession);
 
-
 router.get('/token/:token', checkToken);
 router.post('/token', createToken);
 router.put('/token/:token', updateToken);
@@ -22,7 +21,8 @@ router.get('/board/:id', loadBoard);
 router.put('/board/:id', updateBoard);
 router.get('/boards/:token', getBoards);
 
-// router.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public/index.html'));
-// });
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 export default router;
