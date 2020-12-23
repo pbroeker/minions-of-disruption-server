@@ -11,9 +11,9 @@ import path from 'path';
 // router.post('/login', adminLogin);
 // router.get('/checksession', checkSession);
 
-// router.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public/index.html'));
-// });
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 router.get('/token/:token', checkToken);
 router.post('/token', createToken);
