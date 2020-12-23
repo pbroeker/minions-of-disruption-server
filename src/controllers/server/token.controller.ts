@@ -43,7 +43,6 @@ const checkToken = async (req: Request, res: Response): Promise<void> => {
   try {
     const code = parseInt(req.params.token);
     const answer = await Token.findOne({ code: code });
-    // req.session.loggedIn = true;
     res.status(200);
     res.send({ answer });
   } catch (error) {
