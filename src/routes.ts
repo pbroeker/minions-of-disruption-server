@@ -11,15 +11,15 @@ import path from 'path';
 // router.post('/login', adminLogin);
 // router.get('/checksession', checkSession);
 
-router.get('api/token/:token', checkToken);
-router.post('api/token', createToken);
-router.put('api/token/:token', updateToken);
-router.get('api/tokens', getAllTokens);
+router.get('/api/token/:token', checkToken);
+router.post('/api/token', createToken);
+router.put('/api/token/:token', updateToken);
+router.get('/api/tokens', getAllTokens);
 
-router.post('api/board', saveBoard);
-router.get('api/board/:id', loadBoard);
-router.put('api/board/:id', updateBoard);
-router.get('api/boards/:token', getBoards);
+router.post('/api/board', saveBoard);
+router.get('/api/board/:id', loadBoard);
+router.put('/api/board/:id', updateBoard);
+router.get('/api/boards/:token', getBoards);
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
