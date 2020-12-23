@@ -15,7 +15,7 @@ const server: Server = createServer(app);
 app.use(express.json());
 app.use(cookieparser());
 app.use(cors());
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 // "postinstall": "tsc && mv -i -v src/build dist/ && rm -v -rf src",
 
 sio(server);
