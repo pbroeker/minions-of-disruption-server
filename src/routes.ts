@@ -10,14 +10,10 @@ import path from 'path';
 // router.get('/check', landingPage);
 // router.post('/login', adminLogin);
 // router.get('/checksession', checkSession);
-// router.get('/', function (req, res) {
-//   res.sendFile(path.join(__dirname, '/dist/index'));
-//   // res.send('hello');
-// });
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+// router.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'index.html'));
+// });
 
 router.get('/token/:token', checkToken);
 router.post('/token', createToken);

@@ -2,12 +2,12 @@
   "name": "minions-server",
   "version": "1.0.0",
   "description": "socket-express-server",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon",
     "start": "node dist/index.js",
-    "postinstall": "tsc && mv -i -v src/build dist/ && rm -v -rf src",
+    "postinstall": "tsc && rm -v -rf src",
     "typescript:build": "rimraf ./dist && tsc",
     "deploy": "git add . && git commit -m Heroku && git push heroku typescript:master",
     "lint": "eslint . --ext js,ts"
