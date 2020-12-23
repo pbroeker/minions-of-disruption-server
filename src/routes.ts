@@ -22,7 +22,7 @@ router.put('/api/board/:id', updateBoard);
 router.get('/api/boards/:token', getBoards);
 
 router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
 export default router;

@@ -19,7 +19,7 @@ app.use(cors());
 
 sio(server);
 app.use(router);
-app.use('/', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'build')));
 
 (async function () {
   await db();
