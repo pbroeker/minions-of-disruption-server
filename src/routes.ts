@@ -11,18 +11,18 @@ import path from 'path';
 // router.post('/login', adminLogin);
 // router.get('/checksession', checkSession);
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'));
-});
+// router.get('/', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public/index.html'));
+// });
 
-router.get('token/:token', checkToken);
-router.post('token', createToken);
-router.put('token/:token', updateToken);
-router.get('tokens', getAllTokens);
+router.get('/token/:token', checkToken);
+router.post('/token', createToken);
+router.put('/token/:token', updateToken);
+router.get('/tokens', getAllTokens);
 
-router.post('board', saveBoard);
-router.get('board/:id', loadBoard);
-router.put('board/:id', updateBoard);
-router.get('boards/:token', getBoards);
+router.post('/board', saveBoard);
+router.get('/board/:id', loadBoard);
+router.put('/board/:id', updateBoard);
+router.get('/boards/:token', getBoards);
 
 export default router;
