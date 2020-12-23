@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "nodemon",
     "start": "node dist/index.js",
-    "postinstall": "tsc && rm -v -rf dist/public && rm -v -rf dist/build && mv -i -v src/build dist && rm -v -rf src",
+    "postinstall": "tsc && rm -v -rf dist/build && mv -i -v src/build dist && rm -v -rf src",
     "typescript:build": "rimraf ./dist && tsc",
     "deploy": "git add . && git commit -m Heroku && git push heroku typescript:master",
     "lint": "eslint . --ext js,ts"
