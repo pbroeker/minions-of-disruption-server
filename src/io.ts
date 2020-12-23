@@ -16,7 +16,7 @@ async function sio(server: Server): Promise<void> {
     },
   });
 
-  const adminNamespace: Namespace = io.of('/admin');
+  const adminNamespace: Namespace = io.of('/adminsocket');
   const playerNamespace: Namespace | Server = io.of('');
 
   adminNamespace.on('connection', (socket: Socket) => {
