@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon",
+    "start:dev": "nodemon dist/index",
     "start": "node dist/index.js",
     "postinstall": "tsc && rm -v -rf dist/build && mv -i -v src/build dist && rm -v -rf src",
     "typescript:build": "rimraf ./dist && tsc",

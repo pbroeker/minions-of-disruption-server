@@ -1,6 +1,6 @@
 import rfdc from 'rfdc';
 import { Namespace, Server, Socket } from 'socket.io';
-import { User, Room, Player } from '../../Interfaces/Server.types';
+import { User, Room } from '../../Interfaces/Server.types';
 
 const clone = rfdc();
 let rooms: Room[] = [];
@@ -12,9 +12,7 @@ interface ChangeRoomTypes {
 }
 
 const resetUsers = (): void => {
-  console.log('resetting users. Users before: ', users);
   users = [];
-  console.log('resetting users. Users after: ', users);
 };
 
 const sendRooms = (): Room[] => {

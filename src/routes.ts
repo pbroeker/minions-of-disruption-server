@@ -21,6 +21,22 @@ router.get('/api/board/:id', loadBoard);
 router.put('/api/board/:id', updateBoard);
 router.get('/api/boards/:token', getBoards);
 
+router.get('/api/system/reboot', () => {
+  setTimeout(function () {
+    console.log('restarting');
+    // When NodeJS exits
+    process.on('exit', function () {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('child_process').spawn(process.argv.shift(), process.argv, {
+        cwd: process.cwd(),
+        detached: true,
+        stdio: 'inherit',
+      });
+    });
+    process.exit();
+  }, 1000);
+});
+
 router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build/index.html'));
 });
