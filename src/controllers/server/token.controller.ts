@@ -38,7 +38,6 @@ const updateToken = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// TODO: Implement session
 const checkToken = async (req: Request, res: Response): Promise<void> => {
   try {
     const code = parseInt(req.params.token);
@@ -54,7 +53,6 @@ const checkToken = async (req: Request, res: Response): Promise<void> => {
 
 const getAllTokens = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const code = req.params.token;
     const answer = await Token.find({});
     res.status(200);
     res.send({ answer });

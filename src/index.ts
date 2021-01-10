@@ -15,7 +15,6 @@ const server: Server = createServer(app);
 app.use(express.json());
 app.use(cookieparser());
 app.use(cors());
-// "postinstall": "tsc && mv -i -v src/build dist/ && rm -v -rf src",
 
 sio(server);
 app.use(router);
