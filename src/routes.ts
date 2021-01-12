@@ -3,7 +3,10 @@ const router = express.Router();
 import { checkToken, createToken, updateToken, getAllTokens } from './controllers/server/token.controller';
 import { saveBoard, loadBoard, updateBoard, getBoards } from './controllers/server/board.controller';
 import { restartServer } from './controllers/server/admin.controller';
+import { adminLogin } from './controllers/server/login.controller';
 import path from 'path';
+
+router.post('/api/login', adminLogin);
 
 router.get('/api/token/:token', checkToken);
 router.post('/api/token', createToken);

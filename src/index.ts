@@ -26,3 +26,5 @@ app.use('/', express.static(path.join(__dirname, 'build')));
     console.log(`🍍🍕 listening on ${PORT}. 🍕🍍`);
   });
 })();
+
+export default server;

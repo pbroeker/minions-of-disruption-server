@@ -1,9 +1,15 @@
 import { Request, Response } from 'express';
 
-exports.adminLogin = (req: Request, res: Response) => {
-  if (req.body.username === 'admin' && req.body.password === '123') {
-    // req.session.admin = true;
-    // req.session.loggedIn = true;
-    res.send({ enabledAdmin: true });
-  } else res.status(409);
+const adminLogin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (req.body.username === 'admin' && req.body.password === '123') {
+      res.send({ enabledAdmin: true });
+    } else res.status(409);
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+    res.send(error);
+  }
 };
+
+export { adminLogin };
