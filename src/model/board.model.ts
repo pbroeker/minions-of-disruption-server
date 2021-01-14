@@ -1,13 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { BoardModel } from '../Interfaces/Model.types';
 
-const boardSchema = new mongoose.Schema({
+const boardSchema: Schema = new mongoose.Schema({
   tokenId: { type: Number, required: true },
   boardData: String,
   name: String,
   players: String,
-  id: Number,
+  id: String,
 });
 
-const Board = mongoose.model('Board', boardSchema);
+const Board = mongoose.model<BoardModel>('Board', boardSchema);
 
 export default Board;

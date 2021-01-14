@@ -31,3 +31,18 @@ export type Role = {
   color: string;
   power: string;
 };
+
+export interface BoardCreation {
+  tokenId: number;
+  boardData: string;
+  name: string;
+  players: string;
+  id: number;
+}
+
+export interface Token {
+  code: number;
+  language: string;
+  game_version: string;
+  boardIds: string[];
+}

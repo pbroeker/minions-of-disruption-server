@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
-import Board from '../../model/board.model';
+import { findByIdAndUpdate, insertMany, findById, findByTokenId } from '../../services/board.service';
+import { BoardCreation } from '../../Interfaces/Server.types';
 
-const saveBoard = async (req: Request, res: Response): Promise<void> => {
+const createBoards = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { roomNumber, tokenId } = req.body;
+    const { roomNumber, tokenId }: { roomNumber: number; tokenId: number } = req.body;
     if (!roomNumber || !tokenId) {
       res.sendStatus(500);
     } else {
-      const rooms = [];
+      const rooms: BoardCreation[] = [];
       const roomNames = shuffleNames(roomNamesInit);
       for (let i = 0; i < roomNumber; i++) {
         rooms.push({
@@ -18,7 +19,7 @@ const saveBoard = async (req: Request, res: Response): Promise<void> => {
           tokenId: tokenId,
         });
       }
-      const answer = await Board.insertMany(rooms);
+      const answer = await insertMany(rooms);
       res.status(201);
       res.send(answer);
     }
@@ -32,7 +33,7 @@ const saveBoard = async (req: Request, res: Response): Promise<void> => {
 const loadBoard = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.id;
-    const answer = await Board.findById(id);
+    const answer = await findById(id);
     res.status(200);
     res.send(answer);
   } catch (error) {
@@ -48,7 +49,7 @@ const updateBoard = async (req: Request, res: Response): Promise<void> => {
     const { boardData, players } = req.body;
     if (!boardData || !players || !id) res.sendStatus(500);
     else {
-      const answer = await Board.findByIdAndUpdate(id, { boardData, players }, { new: true });
+      const answer = await findByIdAndUpdate(id, boardData, players);
       res.status(201);
       res.send(answer);
     }
@@ -61,10 +62,10 @@ const updateBoard = async (req: Request, res: Response): Promise<void> => {
 
 const getBoards = async (req: Request, res: Response): Promise<void> => {
   try {
-    const token = req.params.token;
-    if (!token) res.sendStatus(500);
+    const tokenId = parseInt(req.params.token);
+    if (!tokenId) res.sendStatus(500);
     else {
-      const answer = await Board.find({ tokenId: token });
+      const answer = await findByTokenId(tokenId);
       res.status(201);
       res.send(answer);
     }
@@ -75,7 +76,7 @@ const getBoards = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { getBoards, saveBoard, updateBoard, loadBoard };
+export { getBoards, createBoards, updateBoard, loadBoard };
 
 const mockBoard = {
   score: 0,
