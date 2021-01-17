@@ -4,7 +4,7 @@
   "description": "socket-express-server",
   "main": "src/index.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register tests/ --exit",
+    "test": "mocha -r ts-node/register tests/* --exit",
     "start:dev": "nodemon dist/index",
     "start": "node dist/index.js",
     "postinstall": "tsc && rm -v -rf dist/build && mv -i -v src/build dist && rm -v -rf src",
@@ -51,6 +51,7 @@
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1",
     "sinon": "^9.2.3",
+    "sinon-chai": "^3.5.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   },
