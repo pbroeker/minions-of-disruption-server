@@ -40,7 +40,7 @@ export interface BoardCreation {
   id: number;
 }
 
-export interface Token {
+export interface TokenServiceInterface {
   code: number;
   language: string;
   game_version: string;

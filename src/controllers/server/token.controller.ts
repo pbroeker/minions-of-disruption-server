@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import Token from '../../model/token.model';
-import { createCode } from '../../Utils/token.provider';
 import { Room } from '../../Interfaces/Server.types';
+import { createCode } from '../../Utils/token.provider';
+import { create, update, check, getAll } from '../../services/token.services';
 
 const createToken = async (req: Request, res: Response): Promise<void> => {
   try {
     const { language, game_version }: { language: string; game_version: string } = req.body;
-    const code = createCode();
     if (!language || !game_version) {
       res.sendStatus(500);
     } else {
-      const answer = await Token.create({ language, game_version, code });
+      const code = createCode();
+      const answer = await create(language, game_version, code);
       res.status(201);
       res.send(answer);
     }
@@ -28,9 +28,9 @@ const updateToken = async (req: Request, res: Response): Promise<void> => {
     const boardIds = rooms.map((room: Room) => {
       return room._id;
     });
-    const answer = await Token.findOneAndUpdate({ code: code }, { $set: { boardIds: boardIds } }, { new: true });
+    const answer = await update(code, boardIds);
     res.status(200);
-    res.send({ answer });
+    res.send(answer);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -41,7 +41,7 @@ const updateToken = async (req: Request, res: Response): Promise<void> => {
 const checkToken = async (req: Request, res: Response): Promise<void> => {
   try {
     const code = parseInt(req.params.token);
-    const answer = await Token.findOne({ code: code });
+    const answer = await check(code);
     res.status(200);
     res.send({ answer });
   } catch (error) {
@@ -53,7 +53,7 @@ const checkToken = async (req: Request, res: Response): Promise<void> => {
 
 const getAllTokens = async (req: Request, res: Response): Promise<void> => {
   try {
-    const answer = await Token.find({});
+    const answer = await getAll();
     res.status(200);
     res.send({ answer });
   } catch (error) {
