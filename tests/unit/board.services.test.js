@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import { insertMany, findByTokenId, findByIdAndUpdate, findById } from '../../src/services/board.service';
 import mongoose from 'mongoose';
-import { mockRooms } from '../mocks/mockRooms';
+import { mockRooms } from '../mocks/mocks';
 
 const expect = chai.expect;
 chai.use(sinonChai);
