@@ -19,7 +19,6 @@ describe('tokenServices', () => {
 
       expect(createStub).to.have.been.calledOnce;
       expect(createStub).to.have.been.calledWith({ language: 'english', game_version: 'commercial', code: 1234 });
-      expect(createStub).not.to.have.been.calledWith('test');
     });
   });
 
@@ -34,7 +33,6 @@ describe('tokenServices', () => {
         { $set: { boardIds: ['123', '1234', '12345'] } },
         { new: true }
       );
-      expect(updateStub).not.to.have.been.calledWith({ code: 0, boardIds: [] });
     });
   });
 
@@ -45,7 +43,6 @@ describe('tokenServices', () => {
 
       expect(findOneStub).to.have.been.calledOnce;
       expect(findOneStub).to.have.been.calledWith({ code: 1234 });
-      expect(findOneStub).not.to.have.been.calledWith(123);
     });
   });
 

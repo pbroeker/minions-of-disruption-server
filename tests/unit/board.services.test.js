@@ -20,7 +20,6 @@ describe('boardServices', () => {
 
       expect(insertManyStub).to.have.been.calledOnce;
       expect(insertManyStub).to.have.been.calledWith(mockRooms);
-      expect(insertManyStub).not.to.have.been.calledWith(mockRooms[0]);
     });
   });
 
@@ -31,7 +30,6 @@ describe('boardServices', () => {
 
       expect(findByIdStub).to.have.been.calledOnce;
       expect(findByIdStub).to.have.been.calledWith(1234);
-      expect(findByIdStub).not.to.have.been.calledWith(123);
     });
   });
 
@@ -42,7 +40,6 @@ describe('boardServices', () => {
 
       expect(findByIdAndUpdateStub).to.have.been.calledOnce;
       expect(findByIdAndUpdateStub).to.have.been.calledWith(1234);
-      expect(findByIdAndUpdateStub).not.to.have.been.calledWith(123);
     });
   });
 
@@ -53,7 +50,6 @@ describe('boardServices', () => {
 
       expect(findStub).to.have.been.calledOnce;
       expect(findStub).to.have.been.calledWith({ tokenId: 1234 });
-      expect(findStub).not.to.have.been.calledWith({ tokenId: 123 });
     });
   });
 });

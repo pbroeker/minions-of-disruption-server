@@ -66,7 +66,7 @@ const getBoards = async (req: Request, res: Response): Promise<void> => {
     if (!tokenId) res.sendStatus(500);
     else {
       const answer = await findByTokenId(tokenId);
-      res.status(201);
+      res.status(200);
       res.send(answer);
     }
   } catch (error) {
